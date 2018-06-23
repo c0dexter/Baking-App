@@ -1,5 +1,6 @@
 package pl.michaldobrowolski.bakingapp.ui.adapters;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,10 +15,11 @@ import pl.michaldobrowolski.bakingapp.R;
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Recipe;
 
 public class RecipeMasterListAdapter extends RecyclerView.Adapter<RecipeMasterListAdapter.ViewHolder> {
-    // TODO: Get this shit done
     private final String TAG = this.getClass().getSimpleName();
     private final MasterListAdapterOnClickHandler masterListAdapterOnClickHandler;
     private List<Recipe> mRecipeItems;
+    private Recipe recipe;
+    private ImageView recipePhotoCardImageView;
     //private Context mContext;
 
     public RecipeMasterListAdapter(List<Recipe> recipeList, MasterListAdapterOnClickHandler listClickHandler) {
@@ -26,8 +28,9 @@ public class RecipeMasterListAdapter extends RecyclerView.Adapter<RecipeMasterLi
     }
 
 
+    @NonNull
     @Override
-    public RecipeMasterListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecipeMasterListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_item, parent, false);
         view.setFocusable(true);
@@ -35,21 +38,39 @@ public class RecipeMasterListAdapter extends RecyclerView.Adapter<RecipeMasterLi
     }
 
     @Override
-    public void onBindViewHolder(final RecipeMasterListAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final RecipeMasterListAdapter.ViewHolder holder, int position) {
 
-        TextView recipeNameCard = holder.tvCardRecipeName;
-        ImageView recipePhotoCard = holder.ivCardPhotoRecipe;
+        TextView mainRecipeNameTv = holder.tvCardRecipeName;
+        ImageView mainRecipePhotoIv = holder.ivCardPhotoRecipe;
 
         Recipe recipe = mRecipeItems.get(position);
 
-        String recipeName = recipe.getmName();
-        String recipePhoto = recipe.getmImage(); //TODO: Make sure how to load data from drawable
+        mainRecipeNameTv.setText(recipe.getmName());
+        setProperCakePhoto(recipe, mainRecipePhotoIv);
+    }
 
-        recipeNameCard.setText(recipeName);
-        recipePhotoCard.setImageResource(R.drawable.cheesecake); // HARDCODED value
+    private void setProperCakePhoto(Recipe recipe, ImageView imageView) {
+        this.recipe = recipe;
+        this.recipePhotoCardImageView = imageView;
 
-                // TODO: recipePhoto - SET PHOTO HERE DEPENDS ON POSITION (name of recipe in the SwitchCase) and get the stuff from drawable
+        String recipeCakeName = recipe.getmName();
 
+        switch (recipeCakeName) {
+            case "Nutella Pie":
+                imageView.setImageResource(R.drawable.nutella);
+                break;
+            case "Brownies":
+                imageView.setImageResource(R.drawable.brownie);
+                break;
+            case "Yellow Cake":
+                imageView.setImageResource(R.drawable.yellowcake);
+                break;
+            case "Cheesecake":
+                imageView.setImageResource(R.drawable.cheesecake);
+                break;
+            default:
+                imageView.setImageResource(R.drawable.defaultimage);
+        }
     }
 
     @Override
@@ -70,7 +91,7 @@ public class RecipeMasterListAdapter extends RecyclerView.Adapter<RecipeMasterLi
             super(itemView);
             tvCardRecipeName = itemView.findViewById(R.id.text_card_cake_name);
             ivCardPhotoRecipe = itemView.findViewById(R.id.image_card_cake);
-            itemView.setOnClickListener(this);
+            ivCardPhotoRecipe.setOnClickListener(this);
         }
 
         @Override

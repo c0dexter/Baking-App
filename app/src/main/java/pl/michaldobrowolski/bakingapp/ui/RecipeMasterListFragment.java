@@ -1,13 +1,10 @@
 package pl.michaldobrowolski.bakingapp.ui;
 
-import android.app.Fragment;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,9 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 import pl.michaldobrowolski.bakingapp.R;
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Recipe;
@@ -28,14 +23,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.content.ContentValues.TAG;
-
-public class RecipeMasterListFragment extends Fragment implements RecipeMasterListAdapter.MasterListAdapterOnClickHandler {
+public class RecipeMasterListFragment extends android.support.v4.app.Fragment implements RecipeMasterListAdapter.MasterListAdapterOnClickHandler {
     private final String TAG = this.getClass().getSimpleName();
 
-    public Context mContext;
-    //RecipeMasterListAdapter.MasterListAdapterOnClickHandler masterListAdapterOnClickHandler;
     // Items mapping
+    public Context mContext;
     private ApiInterface mApiInterface;
     private List<Recipe> mRecipeList;
     private RecyclerView mRecyclerView;
@@ -45,7 +37,6 @@ public class RecipeMasterListFragment extends Fragment implements RecipeMasterLi
 
     public RecipeMasterListFragment() {
     }
-    // TODO: check butterknife here
 
     @Override
     public void onAttach(Context context) {
@@ -55,8 +46,7 @@ public class RecipeMasterListFragment extends Fragment implements RecipeMasterLi
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
         // Set a root view
         final View rootView = inflater.inflate(R.layout.recipe_master_list_fragment, container, false);
@@ -68,7 +58,6 @@ public class RecipeMasterListFragment extends Fragment implements RecipeMasterLi
         mLayoutManager = new GridLayoutManager(mContext, 1);
         mRecyclerView.setLayoutManager(mLayoutManager);
         fetchRecipes();
-
         return rootView;
     }
 
@@ -91,7 +80,7 @@ public class RecipeMasterListFragment extends Fragment implements RecipeMasterLi
             }
 
             @Override
-            public void onFailure(Call<List<Recipe>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<Recipe>> call, @NonNull Throwable t) {
                 call.cancel();
                 Log.e(TAG, "onFailure: ", t);
             }
@@ -102,6 +91,11 @@ public class RecipeMasterListFragment extends Fragment implements RecipeMasterLi
     @Override
     public void onClickRecipe(int recipeCardPosition) {
         Log.i(TAG, "The " + mRecipeList.get(recipeCardPosition).getmName() + "has been clicked" );
-        Toast.makeText(mContext, "AAAAAAAA", Toast.LENGTH_SHORT).show();
+        Toast.makeText(mContext, "Recipe of " + mRecipeList.get(recipeCardPosition).getmName(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 }
