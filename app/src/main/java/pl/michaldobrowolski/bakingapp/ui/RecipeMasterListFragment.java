@@ -49,7 +49,7 @@ public class RecipeMasterListFragment extends android.support.v4.app.Fragment im
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
         // Set a root view
-        final View rootView = inflater.inflate(R.layout.recipe_master_list_fragment, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_recipe_master_list, container, false);
         // Mapping views
         mRecyclerView = rootView.findViewById(R.id.recipe_master_list_rv);
         mApiInterface = ApiClient.getClient().create(ApiInterface.class);
@@ -90,8 +90,9 @@ public class RecipeMasterListFragment extends android.support.v4.app.Fragment im
 
     @Override
     public void onClickRecipe(int recipeCardPosition) {
-        Log.i(TAG, "The " + mRecipeList.get(recipeCardPosition).getmName() + "has been clicked" );
+        Log.i(TAG, "The " + mRecipeList.get(recipeCardPosition).getmName() + "has been clicked");
         Toast.makeText(mContext, "Recipe of " + mRecipeList.get(recipeCardPosition).getmName(), Toast.LENGTH_SHORT).show();
+        //TODO: Make sending required data to the 2nd screen (fragment) and open it
     }
 
     @Override

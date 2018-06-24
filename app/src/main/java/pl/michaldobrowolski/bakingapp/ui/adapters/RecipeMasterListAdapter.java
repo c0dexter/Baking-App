@@ -20,7 +20,6 @@ public class RecipeMasterListAdapter extends RecyclerView.Adapter<RecipeMasterLi
     private List<Recipe> mRecipeItems;
     private Recipe recipe;
     private ImageView recipePhotoCardImageView;
-    //private Context mContext;
 
     public RecipeMasterListAdapter(List<Recipe> recipeList, MasterListAdapterOnClickHandler listClickHandler) {
         this.mRecipeItems = recipeList;
@@ -32,7 +31,7 @@ public class RecipeMasterListAdapter extends RecyclerView.Adapter<RecipeMasterLi
     @Override
     public RecipeMasterListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_recipe, parent, false);
         view.setFocusable(true);
         return new ViewHolder(view);
     }
