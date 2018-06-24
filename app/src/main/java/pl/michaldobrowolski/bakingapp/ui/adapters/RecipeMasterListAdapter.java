@@ -31,7 +31,7 @@ public class RecipeMasterListAdapter extends RecyclerView.Adapter<RecipeMasterLi
     @Override
     public RecipeMasterListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_recipe, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_recipe_item, parent, false);
         view.setFocusable(true);
         return new ViewHolder(view);
     }
