@@ -1,5 +1,6 @@
 package pl.michaldobrowolski.bakingapp.ui.adapters;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,14 +19,13 @@ public class RecipeMasterListAdapter extends RecyclerView.Adapter<RecipeMasterLi
     private final String TAG = this.getClass().getSimpleName();
     private final MasterListAdapterOnClickHandler masterListAdapterOnClickHandler;
     private List<Recipe> mRecipeItems;
-    private Recipe recipe;
+    private Recipe mRecipe;
     private ImageView recipePhotoCardImageView;
 
     public RecipeMasterListAdapter(List<Recipe> recipeList, MasterListAdapterOnClickHandler listClickHandler) {
         this.mRecipeItems = recipeList;
         this.masterListAdapterOnClickHandler = listClickHandler;
     }
-
 
     @NonNull
     @Override
@@ -42,14 +42,14 @@ public class RecipeMasterListAdapter extends RecyclerView.Adapter<RecipeMasterLi
         TextView mainRecipeNameTv = holder.tvCardRecipeName;
         ImageView mainRecipePhotoIv = holder.ivCardPhotoRecipe;
 
-        Recipe recipe = mRecipeItems.get(position);
+        mRecipe = mRecipeItems.get(position);
 
-        mainRecipeNameTv.setText(recipe.getmName());
-        setProperCakePhoto(recipe, mainRecipePhotoIv);
+        mainRecipeNameTv.setText(mRecipe.getmName());
+        setProperCakePhoto(mRecipe, mainRecipePhotoIv);
     }
 
     private void setProperCakePhoto(Recipe recipe, ImageView imageView) {
-        this.recipe = recipe;
+        this.mRecipe = recipe;
         this.recipePhotoCardImageView = imageView;
 
         String recipeCakeName = recipe.getmName();
@@ -97,6 +97,11 @@ public class RecipeMasterListAdapter extends RecyclerView.Adapter<RecipeMasterLi
         public void onClick(View v) {
             int recipePosition = getAdapterPosition();
             masterListAdapterOnClickHandler.onClickRecipe(recipePosition);
+
         }
+
+
+
+
     }
 }

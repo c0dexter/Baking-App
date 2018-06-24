@@ -11,7 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
 import pl.michaldobrowolski.bakingapp.R;
+import pl.michaldobrowolski.bakingapp.api.model.pojo.Step;
+import pl.michaldobrowolski.bakingapp.ui.adapters.RecipeStepListAdapter;
 
 public class RecipeStepListFragment extends Fragment {
 
@@ -19,6 +23,8 @@ public class RecipeStepListFragment extends Fragment {
     private Context mContext;
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
+    private List<Step> mStepList;
+    private RecipeStepListAdapter mAdapter;
 
     public RecipeStepListFragment() {
     }
@@ -40,8 +46,7 @@ public class RecipeStepListFragment extends Fragment {
         // Mapping views
         mRecyclerView = rootView.findViewById(R.id.recipe_steps_list_rv);
         mRecyclerView.setHasFixedSize(true);
-        //mLayoutManager = new LinearLayoutManager(mContext);
-        mLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false); // implement step view
+        mLayoutManager = new LinearLayoutManager(mContext);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
 

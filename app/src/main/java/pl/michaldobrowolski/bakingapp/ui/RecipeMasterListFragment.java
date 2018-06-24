@@ -1,9 +1,11 @@
 package pl.michaldobrowolski.bakingapp.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -62,7 +64,6 @@ public class RecipeMasterListFragment extends android.support.v4.app.Fragment im
     }
 
     private void fetchRecipes() {
-        //mRecyclerView.setLayoutManager(mLayoutManager);
         call = mApiInterface.fetchRecipes();
         call.enqueue(new Callback<List<Recipe>>() {
             @Override
@@ -92,6 +93,15 @@ public class RecipeMasterListFragment extends android.support.v4.app.Fragment im
     public void onClickRecipe(int recipeCardPosition) {
         Log.i(TAG, "The " + mRecipeList.get(recipeCardPosition).getmName() + "has been clicked");
         Toast.makeText(mContext, "Recipe of " + mRecipeList.get(recipeCardPosition).getmName(), Toast.LENGTH_SHORT).show();
+
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArray("recipeSteps", new Recipe[]{mRecipeList.get(recipeCardPosition)});
+
+        final Intent intent = new Intent(getActivity(), StepsActivity.class);
+        intent.putExtra("recipe", bundle);
+        startActivity(intent);
+
         //TODO: Make sending required data to the 2nd screen (fragment) and open it
     }
 
