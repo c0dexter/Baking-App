@@ -16,7 +16,6 @@ import pl.michaldobrowolski.bakingapp.api.model.pojo.Step;
 
 public class RecipeStepListAdapter extends RecyclerView.Adapter<RecipeStepListAdapter.ViewHolder> {
 
-    //TODO: create adapter of step list
     private final String TAG = this.getClass().getSimpleName();
 
     private final RecipeStepListAdapter.StepListAdapterOnClickHandler stepListAdapterOnClickHandler;
@@ -27,6 +26,12 @@ public class RecipeStepListAdapter extends RecyclerView.Adapter<RecipeStepListAd
     public RecipeStepListAdapter(StepListAdapterOnClickHandler stepListAdapterOnClickHandler, List<Step> mStepList) {
         this.stepListAdapterOnClickHandler = stepListAdapterOnClickHandler;
         this.mStepList = mStepList;
+    }
+
+    public void setSteps(List<Step> steps){
+        this.mStepList.clear();
+        this.mStepList.addAll(steps);
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -79,6 +84,5 @@ public class RecipeStepListAdapter extends RecyclerView.Adapter<RecipeStepListAd
             stepListAdapterOnClickHandler.onClickStep(stepPosition);
         }
     }
-
 
 }
