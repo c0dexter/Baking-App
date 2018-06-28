@@ -13,22 +13,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import pl.michaldobrowolski.bakingapp.R;
+import pl.michaldobrowolski.bakingapp.api.model.pojo.Recipe;
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Step;
 import pl.michaldobrowolski.bakingapp.ui.adapters.RecipeStepListAdapter;
 
 public class RecipeStepListFragment extends Fragment implements RecipeStepListAdapter.StepListAdapterOnClickHandler {
-    private final String TAG = this.getClass().getSimpleName();
+    final static String TAG = RecipeStepListFragment.class.getSimpleName();
+    private static final String BUNDLE_KEY = "recipe";
+    private static final String BUNDLE_PARCELABLE_KEY = "recipeSteps";
 
     // Properties
     private Context mContext;
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
-    private ArrayList<Step> mStepList;
+    private List<Step> mStepList;
     private RecipeStepListAdapter mAdapter;
     private Bundle bundle;
+    private Recipe mRecipe;
+
 
     public RecipeStepListFragment() {
     }
@@ -47,13 +52,8 @@ public class RecipeStepListFragment extends Fragment implements RecipeStepListAd
         // Set a root view
         final View rootView = inflater.inflate(R.layout.recipe_step_list_fragment, container, false);
 
-        if (getArguments() != null) {
-            mStepList = getArguments().getParcelable("steps");
-            mAdapter.setSteps(mStepList);
-        }
-        else {
-            Log.i(TAG, "Error with getting argument with bundle");
-        }
+        getRecipeFromBundle(BUNDLE_KEY, BUNDLE_PARCELABLE_KEY);
+        setStepListFromRecipe(mRecipe);
 
         // Mapping views
         mRecyclerView = rootView.findViewById(R.id.recipe_steps_list_rv);
@@ -64,12 +64,36 @@ public class RecipeStepListFragment extends Fragment implements RecipeStepListAd
         mAdapter = new RecipeStepListAdapter(RecipeStepListFragment.this, mStepList);
         mRecyclerView.setAdapter(mAdapter);
 
-
         return rootView;
     }
 
     @Override
     public void onClickStep(int stepPosition) {
-        Toast.makeText(mContext, "Step #" + stepPosition + " has been clicked.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(mContext, "Step #" + String.valueOf(mStepList.get(stepPosition).getId() + 1) + " has been clicked.", Toast.LENGTH_SHORT).show();
     }
+
+    private void getRecipeFromBundle(String bundleKey, String bundleParcelableKey) {
+
+        bundle = getArguments();
+        if (bundle != null) {
+            if (bundle.containsKey(bundleKey)) {
+                bundle = bundle.getBundle(bundleKey);
+                mRecipe = bundle != null ? bundle.getParcelable(bundleParcelableKey) : null;
+            } else {
+                Log.i(TAG, "Cannot get object from bundle, because the bundle is NULL");
+            }
+        } else {
+            Log.i(TAG, "Bundle is NULL");
+        }
+    }
+
+    /**
+     * Method for getting steps from Recipe object and setting the list of steps of the recipe
+     *
+     * @param recipe - recipe object from bundle
+     */
+    private void setStepListFromRecipe(Recipe recipe) {
+        mStepList = recipe != null ? recipe.getmSteps() : null;
+    }
+
 }

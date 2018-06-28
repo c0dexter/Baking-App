@@ -28,12 +28,6 @@ public class RecipeStepListAdapter extends RecyclerView.Adapter<RecipeStepListAd
         this.mStepList = mStepList;
     }
 
-    public void setSteps(List<Step> steps){
-        this.mStepList.clear();
-        this.mStepList.addAll(steps);
-        notifyDataSetChanged();
-    }
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -49,7 +43,7 @@ public class RecipeStepListAdapter extends RecyclerView.Adapter<RecipeStepListAd
 
         Step step = mStepList.get(position);
         stepDescriptionTv.setText(step.getmShortDescription());
-        stepNumber.setText(String.format("Step #%s", step.toString())); //Here I set the step#
+        stepNumber.setText(String.format("Step #%s", String.valueOf(position + 1))); //Here I set the step#
     }
 
     @Override
@@ -70,12 +64,11 @@ public class RecipeStepListAdapter extends RecyclerView.Adapter<RecipeStepListAd
         TextView stepDescription;
         TextView stepNumber;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
-            stepDescription = itemView.findViewById(R.id.text_short_step_desc);
+            stepDescription = itemView.findViewById(R.id.text_step_short_desc);
             stepNumber = itemView.findViewById(R.id.step_number);
-            itemView.setOnClickListener(this); //TODO: check if this work or use the following solution
-            //stepDescription.setOnClickListener(this);
+            stepDescription.setOnClickListener(this); // NOTICE: setOnclickListener on the specific item
         }
 
         @Override
@@ -84,5 +77,12 @@ public class RecipeStepListAdapter extends RecyclerView.Adapter<RecipeStepListAd
             stepListAdapterOnClickHandler.onClickStep(stepPosition);
         }
     }
+
+    // ----- TEMPORARY REJECTED ------ //
+//    public void setSteps(List<Step> steps) {
+//        this.mStepList.clear();
+//        this.mStepList.addAll(steps);
+//        notifyDataSetChanged();
+//    }
 
 }

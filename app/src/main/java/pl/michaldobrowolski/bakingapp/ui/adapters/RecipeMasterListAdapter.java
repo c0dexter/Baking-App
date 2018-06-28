@@ -100,7 +100,5 @@ public class RecipeMasterListAdapter extends RecyclerView.Adapter<RecipeMasterLi
         }
 
 
-
-
     }
 }
