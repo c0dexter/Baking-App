@@ -9,7 +9,6 @@ public class Step implements Parcelable {
 
     public final static Parcelable.Creator<Step> CREATOR = new Creator<Step>() {
 
-
         @SuppressWarnings({
                 "unchecked"
         })

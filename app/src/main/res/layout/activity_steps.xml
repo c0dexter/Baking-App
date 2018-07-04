@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
         <android.support.v7.widget.CardView
+            android:id="@+id/ingredients_card_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             card_view:cardElevation="5dp"
@@ -25,7 +24,7 @@
                     android:gravity="center"
                     android:minHeight="70dp"
                     android:textSize="18sp"
-                    android:text="Ingredients" />
+                    android:text="@string/ingredients" />
 
                 <TextView
                     android:id="@+id/text_ingredients_button_slogan"
@@ -34,7 +33,7 @@
                     android:background="@color/colorAccent"
                     android:fontFamily="sans-serif-condensed"
                     android:padding="4dp"
-                    android:text="List of needed products and their quantity"
+                    android:text="@string/ingredients_card_view_desc"
                     android:textColor="@android:color/white" />
             </LinearLayout>
 

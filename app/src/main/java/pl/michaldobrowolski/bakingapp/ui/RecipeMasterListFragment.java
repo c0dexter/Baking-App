@@ -51,10 +51,12 @@ public class RecipeMasterListFragment extends android.support.v4.app.Fragment im
 
         // Set a root view
         final View rootView = inflater.inflate(R.layout.fragment_recipe_master_list, container, false);
+
         // Mapping views
         mRecyclerView = rootView.findViewById(R.id.recipe_master_list_rv);
         mApiInterface = ApiClient.getClient().create(ApiInterface.class);
         mRecyclerView.setHasFixedSize(true);
+
         //mLayoutManager = new LinearLayoutManager(mContext);
         mLayoutManager = new GridLayoutManager(mContext, 1);
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -92,7 +94,6 @@ public class RecipeMasterListFragment extends android.support.v4.app.Fragment im
     public void onClickRecipe(int recipeCardPosition) {
         Log.i(TAG, "The " + mRecipeList.get(recipeCardPosition).getmName() + "has been clicked");
         Toast.makeText(mContext, "Recipe of " + mRecipeList.get(recipeCardPosition).getmName(), Toast.LENGTH_SHORT).show();
-
 
         Bundle bundle = new Bundle();
         bundle.putParcelable("recipeSteps", mRecipeList.get(recipeCardPosition));

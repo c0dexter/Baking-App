@@ -8,7 +8,6 @@ import com.google.gson.annotations.SerializedName;
 public class Ingredient implements Parcelable {
 
     public final static Parcelable.Creator<Ingredient> CREATOR = new Creator<Ingredient>() {
-
         @SuppressWarnings({
                 "unchecked"
         })

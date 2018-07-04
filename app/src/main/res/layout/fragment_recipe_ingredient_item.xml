@@ -43,7 +43,7 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/text_ingredient_amount"
+                        android:id="@+id/text_ingredient_qty"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -55,7 +55,7 @@
                         tools:text="350" />
 
                     <TextView
-                        android:id="@+id/text_ingredient_qty"
+                        android:id="@+id/text_ingredient_measure_unit"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"

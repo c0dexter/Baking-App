@@ -8,7 +8,6 @@ import pl.michaldobrowolski.bakingapp.ui.adapters.RecipeMasterListAdapter;
 
 public class MainActivity extends AppCompatActivity implements RecipeMasterListAdapter.MasterListAdapterOnClickHandler {
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

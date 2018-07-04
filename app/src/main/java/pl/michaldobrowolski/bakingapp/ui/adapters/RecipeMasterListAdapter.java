@@ -15,12 +15,14 @@ import pl.michaldobrowolski.bakingapp.R;
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Recipe;
 
 public class RecipeMasterListAdapter extends RecyclerView.Adapter<RecipeMasterListAdapter.ViewHolder> {
+
     private final String TAG = this.getClass().getSimpleName();
     private final MasterListAdapterOnClickHandler masterListAdapterOnClickHandler;
     private List<Recipe> mRecipeItems;
     private Recipe mRecipe;
     private ImageView recipePhotoCardImageView;
 
+    // Constructor
     public RecipeMasterListAdapter(List<Recipe> recipeList, MasterListAdapterOnClickHandler listClickHandler) {
         this.mRecipeItems = recipeList;
         this.masterListAdapterOnClickHandler = listClickHandler;
@@ -29,7 +31,6 @@ public class RecipeMasterListAdapter extends RecyclerView.Adapter<RecipeMasterLi
     @NonNull
     @Override
     public RecipeMasterListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_recipe_item, parent, false);
         view.setFocusable(true);
         return new ViewHolder(view);
@@ -37,12 +38,10 @@ public class RecipeMasterListAdapter extends RecyclerView.Adapter<RecipeMasterLi
 
     @Override
     public void onBindViewHolder(@NonNull final RecipeMasterListAdapter.ViewHolder holder, int position) {
-
         TextView mainRecipeNameTv = holder.tvCardRecipeName;
         ImageView mainRecipePhotoIv = holder.ivCardPhotoRecipe;
 
         mRecipe = mRecipeItems.get(position);
-
         mainRecipeNameTv.setText(mRecipe.getmName());
         setProperCakePhoto(mRecipe, mainRecipePhotoIv);
     }
@@ -96,9 +95,6 @@ public class RecipeMasterListAdapter extends RecyclerView.Adapter<RecipeMasterLi
         public void onClick(View v) {
             int recipePosition = getAdapterPosition();
             masterListAdapterOnClickHandler.onClickRecipe(recipePosition);
-
         }
-
-
     }
 }

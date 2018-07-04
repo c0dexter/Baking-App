@@ -6,7 +6,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
-
     private static final String TAG = ApiClient.class.getClass().getSimpleName();
 
     private static final String BASE_API_URL = "http://go.udacity.com/";

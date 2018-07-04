@@ -20,7 +20,6 @@ public class RecipeStepListAdapter extends RecyclerView.Adapter<RecipeStepListAd
 
     private final RecipeStepListAdapter.StepListAdapterOnClickHandler stepListAdapterOnClickHandler;
     private List<Step> mStepList;
-    private Recipe recipe; // TODO: is this useful?
 
     // Constructor
     public RecipeStepListAdapter(StepListAdapterOnClickHandler stepListAdapterOnClickHandler, List<Step> mStepList) {
@@ -39,11 +38,11 @@ public class RecipeStepListAdapter extends RecyclerView.Adapter<RecipeStepListAd
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         TextView stepDescriptionTv = holder.stepDescription;
-        TextView stepNumber = holder.stepNumber;
+        TextView stepNumberTv = holder.stepNumber;
 
         Step step = mStepList.get(position);
         stepDescriptionTv.setText(step.getmShortDescription());
-        stepNumber.setText(String.format("Step #%s", String.valueOf(position + 1))); //Here I set the step#
+        stepNumberTv.setText(String.format("Step #%s", String.valueOf(position + 1))); //Here I set the step#
     }
 
     @Override
