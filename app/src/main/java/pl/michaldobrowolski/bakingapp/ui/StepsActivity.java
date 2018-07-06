@@ -49,12 +49,7 @@ public class StepsActivity extends AppCompatActivity {
         ingredientsBundle.putParcelableArrayList("ingredient_list", mIngredientList);
         ingredientsBundle.putString("recipe_name", mRecipe.getmName());
 
-
-        //ingredientsBundle.putParcelableArrayList("ingredient_bundle", mIngredientList);
-        //ingredientsBundle.putString("recipe_name", mRecipe.getmName());
-
         addStepListFragment();
-        //addIngredientListFragment();
 
         // Attach the Bundle to an intent
         final Intent ingredientIntent = new Intent(this, IngredientsActivity.class);

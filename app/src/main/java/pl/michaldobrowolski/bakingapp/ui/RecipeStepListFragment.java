@@ -77,12 +77,16 @@ public class RecipeStepListFragment extends Fragment implements RecipeStepListAd
     public void onClickStep(int stepPosition) {
         Toast.makeText(mContext, "Step #" + String.valueOf(mStepList.get(stepPosition).getId() + 1) + " has been clicked.", Toast.LENGTH_SHORT).show();
 
-//        Bundle bundle = new Bundle();
-//        bundle.putParcelable("recipeSteps", mStepList.get(stepPosition));
-//
-//        final Intent intent = new Intent(getContext(), StepDetail.class); // Here should be StepDetail class
-//        intent.putExtra("step", bundle);
-//        startActivity(intent);
+        Bundle stepDetailBundle = new Bundle();
+        stepDetailBundle.putInt("step_id", mStepList.get(stepPosition).getId());
+        stepDetailBundle.putString("step_full_desc", mStepList.get(stepPosition).getmDescription());
+        stepDetailBundle.putString("step_video_url", mStepList.get(stepPosition).getmVideoURL());
+        stepDetailBundle.putString("step_video_thumbnail_url", mStepList.get(stepPosition).getThumbnailURL());
+        stepDetailBundle.putString("recipe_name", mRecipeName);
+
+        final Intent intent = new Intent(getContext(), StepDetailActivity.class);
+        intent.putExtra("step_detail", bundle);
+        startActivity(intent);
     }
 
     /**

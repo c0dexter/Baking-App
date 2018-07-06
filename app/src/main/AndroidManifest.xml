@@ -18,7 +18,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.StepsActivity" />
-        <activity android:name=".ui.IngredientsActivity" /><!-- TODO: check this -->
+        <activity android:name=".ui.IngredientsActivity" />
+        <activity android:name=".ui.StepDetailActivity" /><!-- TODO: check this -->
     </application>
 
 </manifest>

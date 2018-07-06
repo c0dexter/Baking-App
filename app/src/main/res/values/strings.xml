@@ -3,4 +3,7 @@
     <string name="desc_photo_of_cake">Photo of cake</string>
     <string name="ingredients">Ingredients</string>
     <string name="ingredients_card_view_desc">List of needed products and their quantity</string>
+    <string name="next_button_desc">A NEXT button on the step detail screen</string>
+    <string name="previous_button_desc">A PREVIOUS button on the step detail screen</string>
+    <string name="full_step_description_label">Instructions</string>
 </resources>
