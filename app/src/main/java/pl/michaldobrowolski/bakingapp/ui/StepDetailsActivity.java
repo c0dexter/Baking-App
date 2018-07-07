@@ -50,7 +50,6 @@ public class StepDetailsActivity extends AppCompatActivity {
         StepDetailsFragment stepDetailsFragment = new StepDetailsFragment();
         stepDetailsFragment.setArguments(stepDetailBundle);
 
-
         FragmentManager fm = getSupportFragmentManager();
         fm.beginTransaction()
                 .add(R.id.steps_detail_container, stepDetailsFragment)
