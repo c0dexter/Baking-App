@@ -1,4 +1,4 @@
-package pl.michaldobrowolski.bakingapp.ui;
+package pl.michaldobrowolski.bakingapp.ui.recipe;
 
 import android.content.Context;
 import android.content.Intent;
@@ -20,6 +20,7 @@ import pl.michaldobrowolski.bakingapp.api.model.pojo.Recipe;
 import pl.michaldobrowolski.bakingapp.api.service.ApiClient;
 import pl.michaldobrowolski.bakingapp.api.service.ApiInterface;
 import pl.michaldobrowolski.bakingapp.ui.adapters.RecipeMasterListAdapter;
+import pl.michaldobrowolski.bakingapp.ui.recipe.steps.StepsActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

@@ -1,4 +1,4 @@
-package pl.michaldobrowolski.bakingapp.ui;
+package pl.michaldobrowolski.bakingapp.ui.recipe.steps.ingredeints;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

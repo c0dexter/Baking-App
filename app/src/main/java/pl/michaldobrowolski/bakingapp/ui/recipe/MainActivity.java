@@ -1,4 +1,4 @@
-package pl.michaldobrowolski.bakingapp.ui;
+package pl.michaldobrowolski.bakingapp.ui.recipe;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

@@ -1,4 +1,4 @@
-package pl.michaldobrowolski.bakingapp.ui;
+package pl.michaldobrowolski.bakingapp.ui.recipe.steps;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +17,7 @@ import pl.michaldobrowolski.bakingapp.R;
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Ingredient;
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Recipe;
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Step;
+import pl.michaldobrowolski.bakingapp.ui.recipe.steps.ingredeints.IngredientsActivity;
 
 public class StepsActivity extends AppCompatActivity {
     final static String TAG = StepsActivity.class.getSimpleName();

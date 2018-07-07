@@ -3,8 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tool="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:cardCornerRadius="@dimen/cardview_default_elevation">
+    android:layout_height="match_parent"
+    app:cardBackgroundColor="#fff3e0"
+    app:cardCornerRadius="5dp"
+    app:cardElevation="5dp"
+    app:cardUseCompatPadding="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,9 +17,9 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="4dp"
             android:background="#aa000000"
             android:fontFamily="sans-serif-condensed"
+            android:padding="4dp"
             android:text="@string/full_step_description_label"
             android:textColor="@android:color/white"
             android:textSize="20sp"
@@ -30,8 +33,9 @@
                 android:id="@+id/text_step_full_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="4dp"
                 android:fontFamily="sans-serif-condensed"
+                android:padding="4dp"
+                android:textSize="22sp"
                 tool:text="@tools:sample/lorem/random" />
 
         </ScrollView>

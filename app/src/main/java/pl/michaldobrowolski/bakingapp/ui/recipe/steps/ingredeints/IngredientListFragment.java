@@ -1,4 +1,4 @@
-package pl.michaldobrowolski.bakingapp.ui;
+package pl.michaldobrowolski.bakingapp.ui.recipe.steps.ingredeints;
 
 import android.content.Context;
 import android.os.Bundle;

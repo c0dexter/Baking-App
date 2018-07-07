@@ -1,4 +1,4 @@
-package pl.michaldobrowolski.bakingapp.ui;
+package pl.michaldobrowolski.bakingapp.ui.recipe.steps;
 
 import android.content.Context;
 import android.content.Intent;
@@ -20,6 +20,7 @@ import java.util.Objects;
 import pl.michaldobrowolski.bakingapp.R;
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Step;
 import pl.michaldobrowolski.bakingapp.ui.adapters.RecipeStepListAdapter;
+import pl.michaldobrowolski.bakingapp.ui.recipe.steps.details.StepDetailsActivity;
 
 public class StepListFragment extends Fragment implements RecipeStepListAdapter.StepListAdapterOnClickHandler {
     final static String TAG = StepListFragment.class.getSimpleName();
@@ -83,7 +84,7 @@ public class StepListFragment extends Fragment implements RecipeStepListAdapter.
         stepDetailBundle.putString("recipe_name", mRecipeName);
 
         final Intent intent = new Intent(getContext(), StepDetailsActivity.class);
-        intent.putExtra("step_detail", bundle);
+        intent.putExtra("step_detail", stepDetailBundle);
         startActivity(intent);
     }
 
