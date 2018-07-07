@@ -22,9 +22,11 @@ public class StepDetailsActivity extends AppCompatActivity {
 
     private Bundle stepDetailBundle;
     private int mStepId;
+    private int totalStepsAmount;
+    private int currentStep; // Use this to navigation and displaying step# on the details screen
     private String mDescription;
     private String videoUrl;
-    private String thumbnailURL;
+    private String thumbnailURL;  // TODO: make a method for transfer thumbnailURL to videoUrl
     private String mRecipeName;
 
     @Override
@@ -33,9 +35,7 @@ public class StepDetailsActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_step_detail);
 
-        //stepDetailBundle = getIntent().getExtras();
         // Get data from bundle
-        stepDetailBundle = getIntent().getExtras();
         getStepDetailsDataFromBundle(MAIN_BUNDLE_KEY,
                 BUNDLE_STEP_ID_KEY,
                 BUNDLE_STEP_FULL_DESC_KEY,
@@ -57,13 +57,20 @@ public class StepDetailsActivity extends AppCompatActivity {
     }
 
     private void addStepDetailsFragment() {
-        StepDetailsFullDescFragment descriptionFragment = new StepDetailsFullDescFragment();
+        StepDetailsDescFragment descriptionFragment = new StepDetailsDescFragment();
         descriptionFragment.setDescription(mDescription);
         descriptionFragment.setRecipeName(mRecipeName);
+
+        // COMPLETED: here add fragment for exo player
+        StepDetailsExoPlayerFragment stepDetailsExoPlayerFragment = new StepDetailsExoPlayerFragment();
+        stepDetailsExoPlayerFragment.setVideoUrl(videoUrl);
+        stepDetailsExoPlayerFragment.setThumbnailURL(thumbnailURL);
+
 
         FragmentManager fm = getSupportFragmentManager();
         fm.beginTransaction()
                 .add(R.id.step_full_desc_container, descriptionFragment)
+                .add(R.id.exo_player_container, stepDetailsExoPlayerFragment)
                 .commit();
     }
 
@@ -77,7 +84,7 @@ public class StepDetailsActivity extends AppCompatActivity {
      **/
     private void getStepDetailsDataFromBundle(String mainBundleKey, String stepIdKey, String stepFullDescKey,
                                               String stepVideoUrlKey, String stepVideoThumbUrlKey, String recipeNameKey) {
-
+        stepDetailBundle = getIntent().getExtras();
         if (stepDetailBundle != null) {
             if (stepDetailBundle.containsKey(mainBundleKey)) {
                 stepDetailBundle = stepDetailBundle.getBundle(mainBundleKey);

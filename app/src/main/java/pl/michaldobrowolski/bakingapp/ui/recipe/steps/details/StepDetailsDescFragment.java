@@ -14,14 +14,12 @@ import java.util.Objects;
 
 import pl.michaldobrowolski.bakingapp.R;
 
-public class StepDetailsFullDescFragment extends Fragment {
+public class StepDetailsDescFragment extends Fragment {
 
     // -------------------- Properties --------------------//
-    final static String TAG = StepDetailsFullDescFragment.class.getSimpleName();
+    final static String TAG = StepDetailsDescFragment.class.getSimpleName();
 
     private Context mContext;
-    private Bundle stepDetailBundle;
-    private int mStepId;
     private String mDescription;
     private String videoUrl;
     private String thumbnailURL;
@@ -29,7 +27,7 @@ public class StepDetailsFullDescFragment extends Fragment {
     // ------------------ End Of Properties ------------------ //
 
     // Fragment must have: an empty constructor
-    public StepDetailsFullDescFragment() {
+    public StepDetailsDescFragment() {
     }
 
     // Fragment must have: Handling a proper context property because of FRAGMENT
