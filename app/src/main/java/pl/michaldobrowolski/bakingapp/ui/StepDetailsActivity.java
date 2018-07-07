@@ -9,7 +9,7 @@ import java.util.Objects;
 
 import pl.michaldobrowolski.bakingapp.R;
 
-public class StepDetailActivity extends AppCompatActivity {
+public class StepDetailsActivity extends AppCompatActivity {
     final static String TAG = StepsActivity.class.getSimpleName();
     private static final String MAIN_BUNDLE_KEY = "step_detail";
     private static final String BUNDLE_STEP_ID_KEY = "step_id";
@@ -34,7 +34,6 @@ public class StepDetailActivity extends AppCompatActivity {
 
         stepDetailBundle = getIntent().getExtras();
         addStepDetailsFragment();
-
     }
 
     @Override
@@ -48,12 +47,13 @@ public class StepDetailActivity extends AppCompatActivity {
     }
 
     private void addStepDetailsFragment() {
-        RecipeStepDetailsFragment recipeStepDetailsFragment = new RecipeStepDetailsFragment();
-        recipeStepDetailsFragment.setArguments(stepDetailBundle);
+        StepDetailsFragment stepDetailsFragment = new StepDetailsFragment();
+        stepDetailsFragment.setArguments(stepDetailBundle);
+
 
         FragmentManager fm = getSupportFragmentManager();
         fm.beginTransaction()
-                .add(R.id.steps_detail_container, recipeStepDetailsFragment)
+                .add(R.id.steps_detail_container, stepDetailsFragment)
                 .commit();
     }
 

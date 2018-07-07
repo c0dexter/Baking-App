@@ -20,7 +20,7 @@ import pl.michaldobrowolski.bakingapp.R;
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Ingredient;
 import pl.michaldobrowolski.bakingapp.ui.adapters.RecipeIngredientListAdapter;
 
-public class RecipeIngredientListFragment extends Fragment implements RecipeIngredientListAdapter.IngredientListAdapterOnClickHandler {
+public class IngredientListFragment extends Fragment implements RecipeIngredientListAdapter.IngredientListAdapterOnClickHandler {
 
     // Properties
     private static final String BUNDLE_INGREDIENTS_LIST_KEY = "ingredient_list";
@@ -37,7 +37,7 @@ public class RecipeIngredientListFragment extends Fragment implements RecipeIngr
     // ------------------ End Of Properties ------------------ //
 
     // Fragment must have: an empty constructor
-    public RecipeIngredientListFragment() {
+    public IngredientListFragment() {
     }
 
     // Fragment must have: Handling a proper context property because of FRAGMENT
@@ -53,7 +53,7 @@ public class RecipeIngredientListFragment extends Fragment implements RecipeIngr
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         // Set a root view
-        final View rootView = inflater.inflate(R.layout.recipe_ingredient_list_fragment, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_ingredient_list, container, false);
 
         getIngredientsDataFromBundle(BUNDLE_INGREDIENTS_LIST_KEY, BUNDLE_RECIPE_NAME_KEY);
 
@@ -67,7 +67,7 @@ public class RecipeIngredientListFragment extends Fragment implements RecipeIngr
         mLayoutManager = new LinearLayoutManager(mContext);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new RecipeIngredientListAdapter(RecipeIngredientListFragment.this, mIngredientList);
+        mAdapter = new RecipeIngredientListAdapter(IngredientListFragment.this, mIngredientList);
         mRecyclerView.setAdapter(mAdapter);
 
         return rootView;

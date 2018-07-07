@@ -14,10 +14,10 @@ import java.util.Objects;
 
 import pl.michaldobrowolski.bakingapp.R;
 
-public class RecipeStepDetailsFragment extends Fragment {
+public class StepDetailsFragment extends Fragment {
 
     // -------------------- Properties --------------------//
-    final static String TAG = RecipeStepDetailsFragment.class.getSimpleName();
+    final static String TAG = StepDetailsFragment.class.getSimpleName();
     // Bundle keys
     private static final String MAIN_BUNDLE_KEY = "step_detail";
     private static final String BUNDLE_STEP_ID_KEY = "step_id";
@@ -35,7 +35,7 @@ public class RecipeStepDetailsFragment extends Fragment {
     // ------------------ End Of Properties ------------------ //
 
     // Fragment must have: an empty constructor
-    public RecipeStepDetailsFragment() {
+    public StepDetailsFragment() {
     }
 
     // Fragment must have: Handling a proper context property because of FRAGMENT
@@ -51,7 +51,7 @@ public class RecipeStepDetailsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         // Set a root view
-        final View rootView = inflater.inflate(R.layout.fragment_recipe_step_detail, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_step_detail, container, false);
 
         getStepDetailsDataFromBundle(MAIN_BUNDLE_KEY,
                 BUNDLE_STEP_ID_KEY,
@@ -61,11 +61,12 @@ public class RecipeStepDetailsFragment extends Fragment {
                 BUNDLE_RECIPE_NAME_KEY);
 
         // Set a title on NavBar
-        ((StepDetailActivity) Objects.requireNonNull(getActivity()))
+        ((StepDetailsActivity) Objects.requireNonNull(getActivity()))
                 .setActionBarTitle(mRecipeName + "'s instructions");
 
         // Mapping views
         // TODO: Here should be method for add/replace specific fragment
+
 
 
         return rootView;

@@ -12,7 +12,6 @@ import java.util.List;
 
 import pl.michaldobrowolski.bakingapp.R;
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Ingredient;
-import pl.michaldobrowolski.bakingapp.api.model.pojo.Recipe;
 
 // MUST EXTENDS a View Holder
 public class RecipeIngredientListAdapter extends RecyclerView.Adapter<RecipeIngredientListAdapter.ViewHolder> {
@@ -30,7 +29,7 @@ public class RecipeIngredientListAdapter extends RecyclerView.Adapter<RecipeIngr
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_recipe_ingredient_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_ingredient_item, parent, false);
         view.setFocusable(true);
         return new RecipeIngredientListAdapter.ViewHolder(view);
     }

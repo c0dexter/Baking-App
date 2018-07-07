@@ -18,13 +18,11 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import pl.michaldobrowolski.bakingapp.R;
-import pl.michaldobrowolski.bakingapp.api.model.pojo.Ingredient;
-import pl.michaldobrowolski.bakingapp.api.model.pojo.Recipe;
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Step;
 import pl.michaldobrowolski.bakingapp.ui.adapters.RecipeStepListAdapter;
 
-public class RecipeStepListFragment extends Fragment implements RecipeStepListAdapter.StepListAdapterOnClickHandler {
-    final static String TAG = RecipeStepListFragment.class.getSimpleName();
+public class StepListFragment extends Fragment implements RecipeStepListAdapter.StepListAdapterOnClickHandler {
+    final static String TAG = StepListFragment.class.getSimpleName();
     private static final String STEP_LIST_BUNDLE_KEY = "steps_list";
     private static final String RECIPE_NAME_BUNDLE_KEY = "recipe_name";
 
@@ -38,7 +36,7 @@ public class RecipeStepListFragment extends Fragment implements RecipeStepListAd
     private String mRecipeName;
 
 
-    public RecipeStepListFragment() {
+    public StepListFragment() {
     }
 
     // Handling a proper context property because of FRAGMENT
@@ -53,7 +51,7 @@ public class RecipeStepListFragment extends Fragment implements RecipeStepListAd
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         // Set a root view
-        final View rootView = inflater.inflate(R.layout.recipe_step_list_fragment, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_step_list, container, false);
 
         getRecipeDataFromBundle(STEP_LIST_BUNDLE_KEY, RECIPE_NAME_BUNDLE_KEY);
 
@@ -67,7 +65,7 @@ public class RecipeStepListFragment extends Fragment implements RecipeStepListAd
         mLayoutManager = new LinearLayoutManager(mContext);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new RecipeStepListAdapter(RecipeStepListFragment.this, mStepList);
+        mAdapter = new RecipeStepListAdapter(StepListFragment.this, mStepList);
         mRecyclerView.setAdapter(mAdapter);
 
         return rootView;
@@ -84,7 +82,7 @@ public class RecipeStepListFragment extends Fragment implements RecipeStepListAd
         stepDetailBundle.putString("step_video_thumbnail_url", mStepList.get(stepPosition).getThumbnailURL());
         stepDetailBundle.putString("recipe_name", mRecipeName);
 
-        final Intent intent = new Intent(getContext(), StepDetailActivity.class);
+        final Intent intent = new Intent(getContext(), StepDetailsActivity.class);
         intent.putExtra("step_detail", bundle);
         startActivity(intent);
     }

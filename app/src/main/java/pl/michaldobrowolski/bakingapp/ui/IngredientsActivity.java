@@ -2,10 +2,8 @@ package pl.michaldobrowolski.bakingapp.ui;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import java.util.Objects;
 
@@ -33,12 +31,12 @@ public class IngredientsActivity extends AppCompatActivity {
 
     private void addIngredientListFragment() {
         Bundle ingredientsBundle = getIntent().getExtras();
-        RecipeIngredientListFragment recipeIngredientListFragment = new RecipeIngredientListFragment();
-        recipeIngredientListFragment.setArguments(ingredientsBundle);
+        IngredientListFragment ingredientListFragment = new IngredientListFragment();
+        ingredientListFragment.setArguments(ingredientsBundle);
 
         FragmentManager fm = getSupportFragmentManager();
         fm.beginTransaction()
-                .add(R.id.ingredients_list_container, recipeIngredientListFragment)
+                .add(R.id.ingredients_list_container, ingredientListFragment)
                 .commit();
     }
 }

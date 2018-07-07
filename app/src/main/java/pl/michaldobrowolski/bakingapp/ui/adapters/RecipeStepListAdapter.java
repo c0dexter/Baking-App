@@ -11,7 +11,6 @@ import android.widget.TextView;
 import java.util.List;
 
 import pl.michaldobrowolski.bakingapp.R;
-import pl.michaldobrowolski.bakingapp.api.model.pojo.Recipe;
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Step;
 
 public class RecipeStepListAdapter extends RecyclerView.Adapter<RecipeStepListAdapter.ViewHolder> {
@@ -30,7 +29,7 @@ public class RecipeStepListAdapter extends RecyclerView.Adapter<RecipeStepListAd
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_recipe_step_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_step_item, parent, false);
         view.setFocusable(true);
         return new RecipeStepListAdapter.ViewHolder(view);
     }

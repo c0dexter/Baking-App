@@ -73,12 +73,12 @@ public class StepsActivity extends AppCompatActivity {
     }
 
     private void addStepListFragment() {
-        RecipeStepListFragment recipeStepListFragment = new RecipeStepListFragment();
-        recipeStepListFragment.setArguments(stepsBundle);
+        StepListFragment stepListFragment = new StepListFragment();
+        stepListFragment.setArguments(stepsBundle);
 
         FragmentManager fm = getSupportFragmentManager();
         fm.beginTransaction()
-                .add(R.id.steps_list_container, recipeStepListFragment)
+                .add(R.id.steps_list_container, stepListFragment)
                 .commit();
     }
 
