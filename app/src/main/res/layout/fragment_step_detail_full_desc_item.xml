@@ -17,7 +17,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#aa000000"
+            android:background="@color/colorAccent"
             android:fontFamily="sans-serif-condensed"
             android:padding="4dp"
             android:text="@string/full_step_description_label"
@@ -35,7 +35,8 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-condensed"
                 android:padding="4dp"
-                android:textSize="22sp"
+                android:textAlignment="gravity"
+                android:textSize="24sp"
                 tool:text="@tools:sample/lorem/random" />
 
         </ScrollView>
