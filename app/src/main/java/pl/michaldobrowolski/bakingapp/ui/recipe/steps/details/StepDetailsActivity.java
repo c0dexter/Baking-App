@@ -1,5 +1,6 @@
 package pl.michaldobrowolski.bakingapp.ui.recipe.steps.details;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 import java.util.Objects;
 
 import pl.michaldobrowolski.bakingapp.R;
+import pl.michaldobrowolski.bakingapp.ui.recipe.steps.StepListFragment;
 import pl.michaldobrowolski.bakingapp.ui.recipe.steps.StepsActivity;
 
 public class StepDetailsActivity extends AppCompatActivity {
@@ -46,20 +48,6 @@ public class StepDetailsActivity extends AppCompatActivity {
         
         backBtn = findViewById(R.id.button_previous_step);
         nextBtn = findViewById(R.id.button_next_step);
-        
-        backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(StepDetailsActivity.this, "BACK button clicked", Toast.LENGTH_SHORT).show();
-            }
-        });
-        
-        nextBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(StepDetailsActivity.this, "NEXT button clicked", Toast.LENGTH_SHORT).show();
-            }
-        });
 
         // Get data from bundle
         getStepDetailsDataFromBundle(MAIN_BUNDLE_KEY,
@@ -71,7 +59,26 @@ public class StepDetailsActivity extends AppCompatActivity {
                 BUNDLE_RECIPE_TOTAL_STEPS_AMOUNT_KEY);
 
         addStepDetailsFragment();
+        switchThumbUrlToVideoUrl(thumbnailURL, videoUrl);
         setStepsCounter(mStepId, mTotalStepsAmount);
+        showOrHideNavigationButtons();
+
+
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(StepDetailsActivity.this, "BACK button clicked", Toast.LENGTH_SHORT).show();
+                //onClickBackButton(mStepId);
+            }
+        });
+
+        nextBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(StepDetailsActivity.this, "NEXT button clicked", Toast.LENGTH_SHORT).show();
+                //onClickNextButton(mStepId);
+            }
+        });
     }
 
     @Override
@@ -128,7 +135,6 @@ public class StepDetailsActivity extends AppCompatActivity {
         } else {
             Log.i(TAG, "Bundle is NULL");
         }
-
     }
 
     /**
@@ -142,7 +148,6 @@ public class StepDetailsActivity extends AppCompatActivity {
         if(thumbUrl != null && videoUrl == null ){
             videoUrl = thumbnailURL;
         }
-
     }
 
     private void setStepsCounter(int stepId, int totalStepsAmount){
@@ -151,11 +156,23 @@ public class StepDetailsActivity extends AppCompatActivity {
 
         // Add +1 to the real values, because of UX
         int currentStep = stepId + 1;
-        int lastStepNumber = totalStepsAmount;
 
-        String counterValue = currentStep + "/" + lastStepNumber;
+        String counterValue = currentStep + "/" + totalStepsAmount;
         mStepCounterTv.setText(counterValue);
-
     }
 
+    private void showOrHideNavigationButtons(){
+        if(mCurrentStep + 1 >= mTotalStepsAmount){
+            nextBtn.setVisibility(View.INVISIBLE);
+        } else {
+            nextBtn.setVisibility(View.VISIBLE);
+        }
+
+        // First step has index 0
+        if(mCurrentStep - 1 < 0){
+            backBtn.setVisibility(View.INVISIBLE);
+        } else {
+            backBtn.setVisibility(View.VISIBLE);
+        }
+    }
 }

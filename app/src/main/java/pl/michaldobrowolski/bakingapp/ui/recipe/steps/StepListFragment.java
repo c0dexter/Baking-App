@@ -38,6 +38,8 @@ public class StepListFragment extends Fragment implements RecipeStepListAdapter.
     private int mTotalStepAmount;
 
 
+
+
     public StepListFragment() {
     }
 
@@ -46,6 +48,20 @@ public class StepListFragment extends Fragment implements RecipeStepListAdapter.
     public void onAttach(Context context) {
         super.onAttach(context);
         mContext = context;
+//
+//        try {
+//            mBackButtonCallback = (StepDetailsActivity.OnBackButtonOnClickListener) context;
+//        } catch (ClassCastException e) {
+//            throw new ClassCastException(context.toString()
+//                    + " must implement OnBackButtonOnClickListener");
+//        }
+//
+//        try {
+//            mBackButtonCallback = (StepDetailsActivity.OnBackButtonOnClickListener) context;
+//        } catch (ClassCastException e) {
+//            throw new ClassCastException(context.toString()
+//                    + " must implement OnNextButtonOnClickListener");
+//        }
     }
 
     @Nullable

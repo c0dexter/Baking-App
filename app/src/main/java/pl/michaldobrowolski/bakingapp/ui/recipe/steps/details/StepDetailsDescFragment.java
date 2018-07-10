@@ -21,8 +21,6 @@ public class StepDetailsDescFragment extends Fragment {
 
     private Context mContext;
     private String mDescription;
-    private String videoUrl;
-    private String thumbnailURL;
     private String mRecipeName;
     // ------------------ End Of Properties ------------------ //
 
@@ -44,7 +42,6 @@ public class StepDetailsDescFragment extends Fragment {
 
         // Set a root view
         final View rootView = inflater.inflate(R.layout.fragment_step_detail_full_desc_item, container, false); //fragment_step_detail
-
 
         // Set a title on NavBar
         ((StepDetailsActivity) Objects.requireNonNull(getActivity()))
