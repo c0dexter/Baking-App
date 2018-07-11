@@ -5,12 +5,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import java.util.Objects;
 
 import pl.michaldobrowolski.bakingapp.R;
 
@@ -21,7 +20,6 @@ public class StepDetailsDescFragment extends Fragment {
 
     private Context mContext;
     private String mDescription;
-    private String mRecipeName;
     // ------------------ End Of Properties ------------------ //
 
     // Fragment must have: an empty constructor
@@ -43,25 +41,25 @@ public class StepDetailsDescFragment extends Fragment {
         // Set a root view
         final View rootView = inflater.inflate(R.layout.fragment_step_detail_full_desc_item, container, false); //fragment_step_detail
 
-        // Set a title on NavBar
-        ((StepDetailsActivity) Objects.requireNonNull(getActivity()))
-                .setActionBarTitle(mRecipeName + "'s instructions");
+        // Get data from StepDetailActivity
+        getDataFromBundle();
 
         // Mapping views
-        TextView fullDescTv = (TextView) rootView.findViewById(R.id.text_step_full_desc);
+        TextView fullDescTv = rootView.findViewById(R.id.text_step_full_desc);
         fullDescTv.setText(mDescription);
 
         return rootView;
     }
 
-
-    public void setDescription(String description) {
-        this.mDescription = description;
+    private void getDataFromBundle() {
+        Bundle stepDetailBundle = getArguments();
+        if (stepDetailBundle != null && stepDetailBundle.containsKey("desc_bundle")) {
+            mDescription = stepDetailBundle.getString("desc_bundle");
+        } else {
+            Log.i(TAG, "Incorrect bundle key!");
+        }
     }
 
-    public void setRecipeName(String recipeName) {
-        this.mRecipeName = recipeName;
-    }
 }
 
 

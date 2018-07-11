@@ -19,7 +19,7 @@ import pl.michaldobrowolski.bakingapp.api.model.pojo.Recipe;
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Step;
 import pl.michaldobrowolski.bakingapp.ui.recipe.steps.ingredeints.IngredientsActivity;
 
-public class StepsActivity extends AppCompatActivity  {
+public class StepsActivity extends AppCompatActivity {
     final static String TAG = StepsActivity.class.getSimpleName();
     private static final String BUNDLE_KEY = "recipe";
     private static final String BUNDLE_PARCELABLE_KEY = "recipeSteps";

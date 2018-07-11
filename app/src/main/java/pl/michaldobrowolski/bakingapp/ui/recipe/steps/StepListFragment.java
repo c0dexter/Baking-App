@@ -33,11 +33,8 @@ public class StepListFragment extends Fragment implements RecipeStepListAdapter.
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<Step> mStepList = new ArrayList<>();
     private RecipeStepListAdapter mAdapter;
-    private Bundle bundle;
     private String mRecipeName;
     private int mTotalStepAmount;
-
-
 
 
     public StepListFragment() {
@@ -109,15 +106,10 @@ public class StepListFragment extends Fragment implements RecipeStepListAdapter.
         startActivity(intent);
     }
 
-    /**
-     * Methods for getting recipe objects from bundle and saving those in the List
-     *
-     * @param bundleStepListKey   - String key of bundle
-     * @param bundleRecipeNameKey - String key of Parcelable objects
-     */
+
     private void getRecipeDataFromBundle(String bundleStepListKey, String bundleRecipeNameKey) {
 
-        bundle = getArguments();
+        Bundle bundle = getArguments();
         if (bundle != null) {
             if (bundle.containsKey(bundleStepListKey) && bundle.containsKey(bundleRecipeNameKey)) {
                 mRecipeName = bundle.getString(bundleRecipeNameKey);
