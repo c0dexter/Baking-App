@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.Objects;
 
@@ -18,10 +17,14 @@ import pl.michaldobrowolski.bakingapp.R;
 
 public class StepDetailsFragment extends Fragment {
     final static String TAG = StepDetailsFragment.class.getSimpleName();
+
+    // Bundle keys
     private static final String BUNDLE_STEP_ID_KEY = "step_id_bundle_key";
     private static final String BUNDLE_RECIPE_TOTAL_STEPS_AMOUNT_KEY = "total_steps_bundle_key";
     private static final String BUNDLE_RECIPE_NAME_KEY = "recipe_name_bundle_key";
-
+    // Listeners
+    OnBackButtonClickedListener mBackButtonCallback;
+    OnNextButtonClickedListener mNextButtonOnClickListener;
     // Properties
     private Context mContext;
     private int mStepId;
@@ -31,21 +34,32 @@ public class StepDetailsFragment extends Fragment {
     private TextView mStepCounterTv;
     private ImageButton backBtn;
     private ImageButton nextBtn;
-    private Bundle stepDetailBundle; // ?? Check this if I need it
-
+    private Bundle stepDetailBundle;
 
     // Fragment must have: an empty constructor
     public StepDetailsFragment() {
     }
-
 
     // Fragment must have: Handling a proper context property because of FRAGMENT
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         mContext = context;
-    }
 
+        try {
+            mBackButtonCallback = (OnBackButtonClickedListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnBackButtonClickedListener");
+        }
+
+        try {
+            mNextButtonOnClickListener = (OnNextButtonClickedListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnNextButtonClickedListener");
+        }
+    }
 
     // Fragment must have: onCreateView
     @Nullable
@@ -71,11 +85,22 @@ public class StepDetailsFragment extends Fragment {
         showOrHideNavigationButtons();
 
         // Handling actions on BACK / NEXT button
-        setNavigationButtonsBehaviour();
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mBackButtonCallback.onBackButtonClicked(mCurrentStep - 1);
+            }
+        });
+
+        nextBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mNextButtonOnClickListener.onNextButtonClicked(mCurrentStep + 1);
+            }
+        });
 
         return rootView;
     }
-
 
     private void setStepsCounter(int stepId, int totalStepsAmount) {
         mCurrentStep = stepId;
@@ -107,20 +132,15 @@ public class StepDetailsFragment extends Fragment {
         mRecipeName = stepDetailBundle.getString(BUNDLE_RECIPE_NAME_KEY);
     }
 
-    private void setNavigationButtonsBehaviour() {
-        backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(mContext, "BACK button clicked", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        nextBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(mContext, "NEXT button clicked", Toast.LENGTH_SHORT).show();
-            }
-        });
+    // Container Activity must implement this interface
+    public interface OnBackButtonClickedListener {
+        void onBackButtonClicked(int position);
     }
+
+    // Container Activity must implement this interface
+    public interface OnNextButtonClickedListener {
+        void onNextButtonClicked(int position);
+    }
+
 
 }

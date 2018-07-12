@@ -29,38 +29,21 @@ public class StepListFragment extends Fragment implements RecipeStepListAdapter.
 
     // Properties
     private Context mContext;
-    private RecyclerView mRecyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<Step> mStepList = new ArrayList<>();
-    private RecipeStepListAdapter mAdapter;
     private String mRecipeName;
-    private int mTotalStepAmount;
 
-
+    // Fragment must have: an empty constructor
     public StepListFragment() {
     }
 
-    // Handling a proper context property because of FRAGMENT
+    // Fragment must have: Handling a proper context property because of FRAGMENT
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         mContext = context;
-//
-//        try {
-//            mBackButtonCallback = (StepDetailsActivity.OnBackButtonOnClickListener) context;
-//        } catch (ClassCastException e) {
-//            throw new ClassCastException(context.toString()
-//                    + " must implement OnBackButtonOnClickListener");
-//        }
-//
-//        try {
-//            mBackButtonCallback = (StepDetailsActivity.OnBackButtonOnClickListener) context;
-//        } catch (ClassCastException e) {
-//            throw new ClassCastException(context.toString()
-//                    + " must implement OnNextButtonOnClickListener");
-//        }
     }
 
+    // Fragment must have: onCreateView
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -75,12 +58,13 @@ public class StepListFragment extends Fragment implements RecipeStepListAdapter.
                 .setActionBarTitle(mRecipeName);
 
         // Mapping views
-        mRecyclerView = rootView.findViewById(R.id.recipe_steps_list_rv);
+        RecyclerView mRecyclerView = rootView.findViewById(R.id.recipe_steps_list_rv);
         mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(mContext);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new RecipeStepListAdapter(StepListFragment.this, mStepList);
+        // Adapter + RecyclerView
+        RecipeStepListAdapter mAdapter = new RecipeStepListAdapter(StepListFragment.this, mStepList);
         mRecyclerView.setAdapter(mAdapter);
 
         return rootView;
@@ -90,22 +74,15 @@ public class StepListFragment extends Fragment implements RecipeStepListAdapter.
     public void onClickStep(int stepPosition) {
         Toast.makeText(mContext, "Step #" + String.valueOf(mStepList.get(stepPosition).getId() + 1) + " has been clicked.", Toast.LENGTH_SHORT).show();
 
-        // Get the size of mStepList, it'll be used to navigation BACK / NEXT and counter of steps
-        mTotalStepAmount = mStepList.size();
-
         Bundle stepDetailBundle = new Bundle();
-        stepDetailBundle.putInt("step_id", mStepList.get(stepPosition).getId());
-        stepDetailBundle.putString("step_full_desc", mStepList.get(stepPosition).getmDescription());
-        stepDetailBundle.putString("step_video_url", mStepList.get(stepPosition).getmVideoURL());
-        stepDetailBundle.putString("step_video_thumbnail_url", mStepList.get(stepPosition).getThumbnailURL());
-        stepDetailBundle.putString("recipe_name", mRecipeName);
-        stepDetailBundle.putInt("total_steps", mTotalStepAmount);
+        stepDetailBundle.putString("recipe_name_bundle_key", mRecipeName);
+        stepDetailBundle.putParcelableArrayList("step_array_bundle_key", mStepList);
+        stepDetailBundle.putInt("step_position_bundle_key", stepPosition);
 
         final Intent intent = new Intent(getContext(), StepDetailsActivity.class);
         intent.putExtra("step_detail", stepDetailBundle);
         startActivity(intent);
     }
-
 
     private void getRecipeDataFromBundle(String bundleStepListKey, String bundleRecipeNameKey) {
 

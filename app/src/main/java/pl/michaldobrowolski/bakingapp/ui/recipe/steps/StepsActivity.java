@@ -23,12 +23,9 @@ public class StepsActivity extends AppCompatActivity {
     final static String TAG = StepsActivity.class.getSimpleName();
     private static final String BUNDLE_KEY = "recipe";
     private static final String BUNDLE_PARCELABLE_KEY = "recipeSteps";
-    private static final String BUNDLE_PREVIOUS_STEP_KEY = "previous_step";
-    private static final String BUNDLE_NEXT_STEP_KEY = "next_step";
 
     private Bundle bundle;
     private Bundle stepsBundle;
-    private Bundle ingredientsBundle;
     private Recipe mRecipe;
     private ArrayList<Step> mStepList = new ArrayList<>();
     private ArrayList<Ingredient> mIngredientList = new ArrayList<>();
@@ -40,7 +37,7 @@ public class StepsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_steps);
         bundle = getIntent().getExtras();
         stepsBundle = new Bundle();
-        ingredientsBundle = new Bundle();
+        Bundle ingredientsBundle = new Bundle();
 
         getRecipeFromBundle(BUNDLE_KEY, BUNDLE_PARCELABLE_KEY);
         getStepsFromRecipe(mRecipe);
@@ -85,7 +82,6 @@ public class StepsActivity extends AppCompatActivity {
                 .commit();
     }
 
-
     public void setActionBarTitle(String title) {
         Objects.requireNonNull(getSupportActionBar()).setTitle(title);
     }
@@ -108,7 +104,6 @@ public class StepsActivity extends AppCompatActivity {
         } else {
             Log.i(TAG, "Bundle is NULL");
         }
-
     }
 
     private void getStepsFromRecipe(Recipe recipe) {

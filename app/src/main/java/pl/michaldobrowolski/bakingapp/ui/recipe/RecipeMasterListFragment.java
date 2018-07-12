@@ -33,9 +33,7 @@ public class RecipeMasterListFragment extends android.support.v4.app.Fragment im
     private ApiInterface mApiInterface;
     private List<Recipe> mRecipeList;
     private RecyclerView mRecyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
     private RecipeMasterListAdapter mAdapter;
-    private Call<List<Recipe>> call;
 
     public RecipeMasterListFragment() {
     }
@@ -59,14 +57,14 @@ public class RecipeMasterListFragment extends android.support.v4.app.Fragment im
         mRecyclerView.setHasFixedSize(true);
 
         //mLayoutManager = new LinearLayoutManager(mContext);
-        mLayoutManager = new GridLayoutManager(mContext, 1);
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mContext, 1);
         mRecyclerView.setLayoutManager(mLayoutManager);
         fetchRecipes();
         return rootView;
     }
 
     private void fetchRecipes() {
-        call = mApiInterface.fetchRecipes();
+        Call<List<Recipe>> call = mApiInterface.fetchRecipes();
         call.enqueue(new Callback<List<Recipe>>() {
             @Override
             public void onResponse(@NonNull Call<List<Recipe>> call, @NonNull Response<List<Recipe>> response) {

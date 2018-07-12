@@ -20,7 +20,6 @@ public class RecipeMasterListAdapter extends RecyclerView.Adapter<RecipeMasterLi
     private final MasterListAdapterOnClickHandler masterListAdapterOnClickHandler;
     private List<Recipe> mRecipeItems;
     private Recipe mRecipe;
-    private ImageView recipePhotoCardImageView;
 
     // Constructor
     public RecipeMasterListAdapter(List<Recipe> recipeList, MasterListAdapterOnClickHandler listClickHandler) {
@@ -48,7 +47,7 @@ public class RecipeMasterListAdapter extends RecyclerView.Adapter<RecipeMasterLi
 
     private void setProperCakePhoto(Recipe recipe, ImageView imageView) {
         this.mRecipe = recipe;
-        this.recipePhotoCardImageView = imageView;
+        ImageView recipePhotoCardImageView = imageView;
 
         String recipeCakeName = recipe.getmName();
 

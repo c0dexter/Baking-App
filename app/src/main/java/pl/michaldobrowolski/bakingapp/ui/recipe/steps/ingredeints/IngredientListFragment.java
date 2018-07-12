@@ -21,17 +21,14 @@ import pl.michaldobrowolski.bakingapp.api.model.pojo.Ingredient;
 import pl.michaldobrowolski.bakingapp.ui.adapters.RecipeIngredientListAdapter;
 
 public class IngredientListFragment extends Fragment implements RecipeIngredientListAdapter.IngredientListAdapterOnClickHandler {
+    private final String TAG = this.getClass().getSimpleName();
 
-    // Properties
+    // Bundle keys
     private static final String BUNDLE_INGREDIENTS_LIST_KEY = "ingredient_list";
     private static final String BUNDLE_RECIPE_NAME_KEY = "recipe_name";
-    private final String TAG = this.getClass().getSimpleName();
+    // Properties
     private Context mContext;
-    private RecyclerView mRecyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<Ingredient> mIngredientList = new ArrayList<>();
-    private RecipeIngredientListAdapter mAdapter;
-    private Bundle mIngredientsBundle;
     private String mRecipeName;
 
     // ------------------ End Of Properties ------------------ //
@@ -62,12 +59,12 @@ public class IngredientListFragment extends Fragment implements RecipeIngredient
                 .setActionBarTitle(mRecipeName + "'s ingredients");
 
         // Mapping views
-        mRecyclerView = rootView.findViewById(R.id.recipe_ingredient_list_rv);
+        RecyclerView mRecyclerView = rootView.findViewById(R.id.recipe_ingredient_list_rv);
         mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(mContext);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new RecipeIngredientListAdapter(IngredientListFragment.this, mIngredientList);
+        RecipeIngredientListAdapter mAdapter = new RecipeIngredientListAdapter(IngredientListFragment.this, mIngredientList);
         mRecyclerView.setAdapter(mAdapter);
 
         return rootView;
@@ -85,7 +82,7 @@ public class IngredientListFragment extends Fragment implements RecipeIngredient
      * @param bundleRecipeNameKey      - String key of Recipe Name
      */
     private void getIngredientsDataFromBundle(String bundleIngredientsListKey, String bundleRecipeNameKey) {
-        mIngredientsBundle = getArguments();
+        Bundle mIngredientsBundle = getArguments();
         if (mIngredientsBundle != null) {
             if (mIngredientsBundle.containsKey(bundleIngredientsListKey) && mIngredientsBundle.containsKey(bundleRecipeNameKey)) {
                 mIngredientList.addAll(mIngredientsBundle.getParcelableArrayList(bundleIngredientsListKey));

@@ -61,7 +61,6 @@ public class StepDetailsExoPlayerFragment extends Fragment {
         }
     }
 
-
     private void getDataFromBundle() {
         Bundle exoPlayerBundle = getArguments();
         mVideoUrl = Objects.requireNonNull(exoPlayerBundle).getString(BUNDLE_VIDEO_URL_KEY);
