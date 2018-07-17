@@ -6,4 +6,5 @@
     <string name="next_button_desc">A NEXT button on the step detail screen</string>
     <string name="previous_button_desc">A PREVIOUS button on the step detail screen</string>
     <string name="full_step_description_label">Instructions</string>
+    <string name="default_step_image_desc">Default image of step detail if a video clip is missing</string>
 </resources>

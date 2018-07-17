@@ -1,10 +1,12 @@
 package pl.michaldobrowolski.bakingapp.ui.recipe.steps.details;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -14,7 +16,10 @@ import pl.michaldobrowolski.bakingapp.R;
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Step;
 import pl.michaldobrowolski.bakingapp.ui.recipe.steps.StepsActivity;
 
-public class StepDetailsActivity extends AppCompatActivity implements StepDetailsFragment.OnBackButtonClickedListener, StepDetailsFragment.OnNextButtonClickedListener {
+import static pl.michaldobrowolski.bakingapp.ui.recipe.steps.details.StepDetailsFragment.OnBackButtonClickedListener;
+import static pl.michaldobrowolski.bakingapp.ui.recipe.steps.details.StepDetailsFragment.OnNextButtonClickedListener;
+
+public class StepDetailsActivity extends AppCompatActivity implements OnBackButtonClickedListener, OnNextButtonClickedListener {
     final static String TAG = StepsActivity.class.getSimpleName();
     private static final String MAIN_BUNDLE_KEY = "step_detail";
     private static final String BUNDLE_ARRAY_STEPS_KEY = "step_array_bundle_key";
@@ -31,6 +36,9 @@ public class StepDetailsActivity extends AppCompatActivity implements StepDetail
     private String mVideoUrl;
     private String mThumbnailUrl;
     private FragmentManager fragmentManager;
+    private StepDetailsFragment stepDetailsFragment;
+    private StepDetailsDescFragment descriptionFragment;
+    private StepDetailsExoPlayerFragment exoPlayerFragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,7 +62,7 @@ public class StepDetailsActivity extends AppCompatActivity implements StepDetail
         mDescription = mStepArrayList.get(position).getmDescription();
         mVideoUrl = mStepArrayList.get(position).getmVideoURL();
         mThumbnailUrl = mStepArrayList.get(position).getThumbnailURL();
-        mStepId = mStepArrayList.get(position).getId();
+        mStepId = position; // Getting position instead of step ID to avoiding bug in numeration
     }
 
     @Override
@@ -69,15 +77,15 @@ public class StepDetailsActivity extends AppCompatActivity implements StepDetail
 
     private void addStepDetailsFragment() {
         // Main step details fragment
-        StepDetailsFragment stepDetailsFragment = new StepDetailsFragment();
+        stepDetailsFragment = new StepDetailsFragment();
         stepDetailsFragment.setArguments(makeStepDetailsBundle());
 
         // Full description fragment
-        StepDetailsDescFragment descriptionFragment = new StepDetailsDescFragment();
+        descriptionFragment = new StepDetailsDescFragment();
         descriptionFragment.setArguments(makeFullDescBundle());
 
         // ExoPlayer Fragment
-        StepDetailsExoPlayerFragment exoPlayerFragment = new StepDetailsExoPlayerFragment();
+        exoPlayerFragment = new StepDetailsExoPlayerFragment();
         exoPlayerFragment.setArguments(makeExoPlayerBundle());
 
         // Choose a method delivery data to fragment. For new view: "add", for existed view "replace"
@@ -113,7 +121,6 @@ public class StepDetailsActivity extends AppCompatActivity implements StepDetail
             Log.i(TAG, "Bundle is NULL");
         }
     }
-
 
     private Bundle makeStepDetailsBundle() {
         Bundle stepDetailsBundle = new Bundle();
@@ -152,5 +159,9 @@ public class StepDetailsActivity extends AppCompatActivity implements StepDetail
         addStepDetailsFragment();
     }
 
-
+    @Override
+    protected void onPause() {
+        super.onPause();
+        exoPlayerFragment.onPause();
+    }
 }

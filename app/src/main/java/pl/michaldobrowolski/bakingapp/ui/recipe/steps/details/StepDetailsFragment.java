@@ -1,6 +1,8 @@
 package pl.michaldobrowolski.bakingapp.ui.recipe.steps.details;
 
+import android.app.ActionBar;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -96,10 +98,20 @@ public class StepDetailsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 mNextButtonOnClickListener.onNextButtonClicked(mCurrentStep + 1);
+
             }
         });
 
         return rootView;
+    }
+
+    private void checkScreenOrientation(){
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            backBtn.setVisibility(View.GONE);
+            nextBtn.setVisibility(View.GONE);
+            mStepCounterTv.setVisibility(View.GONE);
+
+        }
     }
 
     private void setStepsCounter(int stepId, int totalStepsAmount) {
