@@ -2,18 +2,15 @@ package pl.michaldobrowolski.bakingapp.ui.recipe.steps.details;
 
 import android.app.ActionBar;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.google.android.exoplayer2.C;
@@ -49,7 +46,6 @@ public class StepDetailsExoPlayerFragment extends Fragment {
     private SimpleExoPlayerView mPlayerView;
     private ImageView mDefaultStepImage;
     private long media_length;
-    private ActionBar actionBar;
     // ------------------ End Of Properties ------------------ //
 
     // Fragment must have: an empty constructor

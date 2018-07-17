@@ -1,12 +1,10 @@
 package pl.michaldobrowolski.bakingapp.ui.recipe.steps.details;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -15,6 +13,7 @@ import java.util.Objects;
 import pl.michaldobrowolski.bakingapp.R;
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Step;
 import pl.michaldobrowolski.bakingapp.ui.recipe.steps.StepsActivity;
+import pl.michaldobrowolski.bakingapp.utils.UtilityHelper;
 
 import static pl.michaldobrowolski.bakingapp.ui.recipe.steps.details.StepDetailsFragment.OnBackButtonClickedListener;
 import static pl.michaldobrowolski.bakingapp.ui.recipe.steps.details.StepDetailsFragment.OnNextButtonClickedListener;
@@ -39,6 +38,7 @@ public class StepDetailsActivity extends AppCompatActivity implements OnBackButt
     private StepDetailsFragment stepDetailsFragment;
     private StepDetailsDescFragment descriptionFragment;
     private StepDetailsExoPlayerFragment exoPlayerFragment;
+    private UtilityHelper utilityHelper = new UtilityHelper();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -132,7 +132,7 @@ public class StepDetailsActivity extends AppCompatActivity implements OnBackButt
 
     private Bundle makeFullDescBundle() {
         Bundle fullDescBundle = new Bundle();
-        fullDescBundle.putString("desc_bundle", mDescription);
+        fullDescBundle.putString("desc_bundle", utilityHelper.removeRedundantCharactersFromText("^(\\d*.\\s)",mDescription));
         return fullDescBundle;
     }
 

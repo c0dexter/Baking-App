@@ -1,12 +1,12 @@
 package pl.michaldobrowolski.bakingapp.ui.recipe.steps.details;
 
-import android.app.ActionBar;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +20,7 @@ import pl.michaldobrowolski.bakingapp.R;
 public class StepDetailsFragment extends Fragment {
     final static String TAG = StepDetailsFragment.class.getSimpleName();
 
+    // -------------------- Properties --------------------//
     // Bundle keys
     private static final String BUNDLE_STEP_ID_KEY = "step_id_bundle_key";
     private static final String BUNDLE_RECIPE_TOTAL_STEPS_AMOUNT_KEY = "total_steps_bundle_key";
@@ -27,7 +28,7 @@ public class StepDetailsFragment extends Fragment {
     // Listeners
     OnBackButtonClickedListener mBackButtonCallback;
     OnNextButtonClickedListener mNextButtonOnClickListener;
-    // Properties
+    // Fields
     private Context mContext;
     private int mStepId;
     private int mTotalStepsAmount;
@@ -37,6 +38,7 @@ public class StepDetailsFragment extends Fragment {
     private ImageButton backBtn;
     private ImageButton nextBtn;
     private Bundle stepDetailBundle;
+    // ------------------ End Of Properties ------------------ //
 
     // Fragment must have: an empty constructor
     public StepDetailsFragment() {
@@ -68,50 +70,63 @@ public class StepDetailsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        // Set a root view
-        final View rootView = inflater.inflate(R.layout.fragment_step_detail, container, false);
-
         // Get data from StepDetailActivity
         getDataFromBundle();
 
-        // Set a title on NavBar
-        ((StepDetailsActivity) Objects.requireNonNull(getActivity()))
-                .setActionBarTitle(mRecipeName + "'s instructions");
-
-        // Mapping views
-        backBtn = rootView.findViewById(R.id.button_previous_step);
-        nextBtn = rootView.findViewById(R.id.button_next_step);
-        mStepCounterTv = rootView.findViewById(R.id.text_step_counter);
-
-        setStepsCounter(mStepId, mTotalStepsAmount);
-        showOrHideNavigationButtons();
-
-        // Handling actions on BACK / NEXT button
-        backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mBackButtonCallback.onBackButtonClicked(mCurrentStep - 1);
-            }
-        });
-
-        nextBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mNextButtonOnClickListener.onNextButtonClicked(mCurrentStep + 1);
-
-            }
-        });
+        // Set a root view
+        View rootView = checkScreenOrientationAndSetRootView(inflater, container);
 
         return rootView;
     }
 
-    private void checkScreenOrientation(){
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-            backBtn.setVisibility(View.GONE);
-            nextBtn.setVisibility(View.GONE);
-            mStepCounterTv.setVisibility(View.GONE);
+    private View checkScreenOrientationAndSetRootView(LayoutInflater inflater, ViewGroup container) {
+        View rootView;
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
 
+            // Play a video clip on the full screen, hide redundant elements in a full screen mode
+            Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).hide();
+            rootView = getActivity().getWindow().getDecorView();
+            int uiOptions =
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
+                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
+                    View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
+                    View.SYSTEM_UI_FLAG_FULLSCREEN;
+            rootView.setSystemUiVisibility(uiOptions);
+            rootView = inflater.inflate(R.layout.fragment_step_detail_horizontal, container, false);
+
+        } else {
+            Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).show();
+            rootView = inflater.inflate(R.layout.fragment_step_detail_vertical, container, false);
+
+            // Set a title on NavBar
+            ((StepDetailsActivity) Objects.requireNonNull(getActivity()))
+                    .setActionBarTitle(mRecipeName + "'s instructions");
+
+            // Mapping views
+            backBtn = rootView.findViewById(R.id.button_previous_step);
+            nextBtn = rootView.findViewById(R.id.button_next_step);
+            mStepCounterTv = rootView.findViewById(R.id.text_step_counter);
+
+            setStepsCounter(mStepId, mTotalStepsAmount);
+            showOrHideNavigationButtons();
+
+            // Handling actions on BACK / NEXT button
+            backBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mBackButtonCallback.onBackButtonClicked(mCurrentStep - 1);
+                }
+            });
+
+            nextBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mNextButtonOnClickListener.onNextButtonClicked(mCurrentStep + 1);
+                }
+            });
         }
+        return rootView;
     }
 
     private void setStepsCounter(int stepId, int totalStepsAmount) {

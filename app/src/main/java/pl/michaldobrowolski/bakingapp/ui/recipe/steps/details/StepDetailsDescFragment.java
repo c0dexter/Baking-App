@@ -39,7 +39,7 @@ public class StepDetailsDescFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         // Set a root view
-        final View rootView = inflater.inflate(R.layout.fragment_step_detail_full_desc_item, container, false); //fragment_step_detail
+        final View rootView = inflater.inflate(R.layout.fragment_step_detail_full_desc_item, container, false); //fragment_step_detail_vertical
 
         // Get data from StepDetailActivity
         getDataFromBundle();
