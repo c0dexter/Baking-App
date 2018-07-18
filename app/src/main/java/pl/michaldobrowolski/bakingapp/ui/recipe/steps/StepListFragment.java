@@ -23,14 +23,16 @@ import pl.michaldobrowolski.bakingapp.ui.adapters.RecipeStepListAdapter;
 import pl.michaldobrowolski.bakingapp.ui.recipe.steps.details.StepDetailsActivity;
 
 public class StepListFragment extends Fragment implements RecipeStepListAdapter.StepListAdapterOnClickHandler {
+    // ------------------ Properties ------------------ //
     final static String TAG = StepListFragment.class.getSimpleName();
+    // Bundle keys
     private static final String STEP_LIST_BUNDLE_KEY = "steps_list";
     private static final String RECIPE_NAME_BUNDLE_KEY = "recipe_name";
-
     // Properties
     private Context mContext;
     private ArrayList<Step> mStepList = new ArrayList<>();
     private String mRecipeName;
+    // ------------------ End Of Properties ------------------ //
 
     // Fragment must have: an empty constructor
     public StepListFragment() {
@@ -72,8 +74,6 @@ public class StepListFragment extends Fragment implements RecipeStepListAdapter.
 
     @Override
     public void onClickStep(int stepPosition) {
-        Toast.makeText(mContext, "Step #" + String.valueOf(mStepList.get(stepPosition).getId() + 1) + " has been clicked.", Toast.LENGTH_SHORT).show();
-
         Bundle stepDetailBundle = new Bundle();
         stepDetailBundle.putString("recipe_name_bundle_key", mRecipeName);
         stepDetailBundle.putParcelableArrayList("step_array_bundle_key", mStepList);
@@ -85,7 +85,6 @@ public class StepListFragment extends Fragment implements RecipeStepListAdapter.
     }
 
     private void getRecipeDataFromBundle(String bundleStepListKey, String bundleRecipeNameKey) {
-
         Bundle bundle = getArguments();
         if (bundle != null) {
             if (bundle.containsKey(bundleStepListKey) && bundle.containsKey(bundleRecipeNameKey)) {

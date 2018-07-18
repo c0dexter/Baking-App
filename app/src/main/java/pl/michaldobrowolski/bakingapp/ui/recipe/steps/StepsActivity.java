@@ -20,21 +20,31 @@ import pl.michaldobrowolski.bakingapp.api.model.pojo.Step;
 import pl.michaldobrowolski.bakingapp.ui.recipe.steps.ingredeints.IngredientsActivity;
 
 public class StepsActivity extends AppCompatActivity {
+    // -------------------- Properties --------------------//
     final static String TAG = StepsActivity.class.getSimpleName();
+    // Bundle Keys
     private static final String BUNDLE_KEY = "recipe";
     private static final String BUNDLE_PARCELABLE_KEY = "recipeSteps";
-
+    // Properties
     private Bundle bundle;
     private Bundle stepsBundle;
     private Recipe mRecipe;
     private ArrayList<Step> mStepList = new ArrayList<>();
     private ArrayList<Ingredient> mIngredientList = new ArrayList<>();
+    private boolean fragmentAdded;
+    // ------------------ End Of Properties ------------------ //
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_steps);
+
+        // Check if saved instance state exist and set a fragmentAdded flag
+        if (savedInstanceState != null) {
+            fragmentAdded = savedInstanceState.getBoolean("fragment_added");
+        }
+
         bundle = getIntent().getExtras();
         stepsBundle = new Bundle();
         Bundle ingredientsBundle = new Bundle();
@@ -49,7 +59,7 @@ public class StepsActivity extends AppCompatActivity {
         ingredientsBundle.putParcelableArrayList("ingredient_list", mIngredientList);
         ingredientsBundle.putString("recipe_name", mRecipe.getmName());
 
-        addStepListFragment();
+        addStepListFragment(fragmentAdded);
 
         // Attach the Bundle to an intent
         final Intent ingredientIntent = new Intent(this, IngredientsActivity.class);
@@ -72,14 +82,23 @@ public class StepsActivity extends AppCompatActivity {
         return true;
     }
 
-    private void addStepListFragment() {
+    private void addStepListFragment(boolean fragmentExist) {
         StepListFragment stepListFragment = new StepListFragment();
         stepListFragment.setArguments(stepsBundle);
 
         FragmentManager fm = getSupportFragmentManager();
-        fm.beginTransaction()
-                .add(R.id.steps_list_container, stepListFragment)
-                .commit();
+
+        if (!fragmentExist) {
+            fm.beginTransaction()
+                    .add(R.id.steps_list_container, stepListFragment)
+                    .commit();
+            fragmentAdded = true;
+        } else {
+            fm.beginTransaction()
+                    .replace(R.id.steps_list_container, stepListFragment)
+                    .commit();
+        }
+
     }
 
     public void setActionBarTitle(String title) {
@@ -118,5 +137,11 @@ public class StepsActivity extends AppCompatActivity {
         } else {
             mIngredientList = null;
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("fragment_added", fragmentAdded);
     }
 }

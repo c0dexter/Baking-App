@@ -1,6 +1,5 @@
 package pl.michaldobrowolski.bakingapp.ui.recipe.steps.details;
 
-import android.app.ActionBar;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -36,16 +35,17 @@ public class StepDetailsExoPlayerFragment extends Fragment {
 
     // -------------------- Properties --------------------//
     final static String TAG = StepDetailsDescFragment.class.getSimpleName();
+    // Bundle keys
     private static final String BUNDLE_VIDEO_URL_KEY = "video_url_bundle";
     private static final String BUNDLE_VIDEO_THUMB_URL_KEY = "thumbnail_url_bundle";
-
+    // Fields
     private Context mContext;
     private String mVideoUrl;
     private String mThumbnailUrl;
     private SimpleExoPlayer mExoPlayer;
     private SimpleExoPlayerView mPlayerView;
     private ImageView mDefaultStepImage;
-    private long media_length;
+    private long mMediaLength;
     // ------------------ End Of Properties ------------------ //
 
     // Fragment must have: an empty constructor
@@ -76,7 +76,7 @@ public class StepDetailsExoPlayerFragment extends Fragment {
         // Verify and populate a correct Video URL by using thumb url (for consistence)
         switchThumbUrlToVideoUrl(mThumbnailUrl);
 
-        // TODO: Here should be make some EXO PLAYER stuff
+        // ExoPlayer
         showOrHideExoPlayer(mPlayerView, mDefaultStepImage);
 
         return rootView;
@@ -102,7 +102,7 @@ public class StepDetailsExoPlayerFragment extends Fragment {
 
     private void getDataFromBundle() {
         Bundle exoPlayerBundle = getArguments();
-        if (exoPlayerBundle.containsKey(BUNDLE_VIDEO_URL_KEY) && (exoPlayerBundle.containsKey(BUNDLE_VIDEO_THUMB_URL_KEY))) {
+        if (Objects.requireNonNull(exoPlayerBundle).containsKey(BUNDLE_VIDEO_URL_KEY) && (exoPlayerBundle.containsKey(BUNDLE_VIDEO_THUMB_URL_KEY))) {
             mVideoUrl = Objects.requireNonNull(exoPlayerBundle).getString(BUNDLE_VIDEO_URL_KEY);
             mThumbnailUrl = Objects.requireNonNull(exoPlayerBundle).getString(BUNDLE_VIDEO_THUMB_URL_KEY);
         } else {
@@ -137,9 +137,9 @@ public class StepDetailsExoPlayerFragment extends Fragment {
     public void onPause() {
         super.onPause();
         if (mExoPlayer != null) {
+            mMediaLength = mExoPlayer.getCurrentPosition();
             mExoPlayer.stop();
             mExoPlayer.release();
-            media_length = mExoPlayer.getCurrentPosition();
         }
     }
 
@@ -147,7 +147,7 @@ public class StepDetailsExoPlayerFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if (mExoPlayer != null) {
-            mExoPlayer.seekTo(media_length);
+            mExoPlayer.seekTo(mMediaLength);
             mExoPlayer.setPlayWhenReady(true);
         }
     }

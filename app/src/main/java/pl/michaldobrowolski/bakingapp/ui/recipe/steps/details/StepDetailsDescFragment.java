@@ -17,7 +17,7 @@ public class StepDetailsDescFragment extends Fragment {
 
     // -------------------- Properties --------------------//
     final static String TAG = StepDetailsDescFragment.class.getSimpleName();
-
+    // Fields
     private Context mContext;
     private String mDescription;
     // ------------------ End Of Properties ------------------ //

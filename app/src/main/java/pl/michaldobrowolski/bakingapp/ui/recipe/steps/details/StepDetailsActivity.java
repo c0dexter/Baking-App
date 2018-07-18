@@ -19,14 +19,15 @@ import static pl.michaldobrowolski.bakingapp.ui.recipe.steps.details.StepDetails
 import static pl.michaldobrowolski.bakingapp.ui.recipe.steps.details.StepDetailsFragment.OnNextButtonClickedListener;
 
 public class StepDetailsActivity extends AppCompatActivity implements OnBackButtonClickedListener, OnNextButtonClickedListener {
+    // -------------------- Properties --------------------//
     final static String TAG = StepsActivity.class.getSimpleName();
+    // Bundle keys
     private static final String MAIN_BUNDLE_KEY = "step_detail";
     private static final String BUNDLE_ARRAY_STEPS_KEY = "step_array_bundle_key";
     private static final String BUNDLE_STEP_ID_KEY = "step_position_bundle_key";
     private static final String BUNDLE_RECIPE_NAME_KEY = "recipe_name_bundle_key";
-    // Properties
+    // Fields
     private int mClickedStepPosition;
-    private int mAdjustedStepPosition;
     private String mRecipeName;
     private ArrayList<Step> mStepArrayList;
     private int mTotalStepsAmount;
@@ -34,11 +35,12 @@ public class StepDetailsActivity extends AppCompatActivity implements OnBackButt
     private String mDescription;
     private String mVideoUrl;
     private String mThumbnailUrl;
-    private FragmentManager fragmentManager;
     private StepDetailsFragment stepDetailsFragment;
     private StepDetailsDescFragment descriptionFragment;
     private StepDetailsExoPlayerFragment exoPlayerFragment;
     private UtilityHelper utilityHelper = new UtilityHelper();
+    private boolean fragmentAdded;
+    // ------------------ End Of Properties ------------------ //
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,8 +55,14 @@ public class StepDetailsActivity extends AppCompatActivity implements OnBackButt
                 BUNDLE_STEP_ID_KEY,
                 BUNDLE_RECIPE_NAME_KEY);
 
+        // Check if saved instance state exist and set a fragmentAdded flag
+        if(savedInstanceState != null){
+            fragmentAdded = savedInstanceState.getBoolean("fragment_added");
+            mClickedStepPosition = savedInstanceState.getInt("clicked_step_position");
+        }
+
         getDataForSpecificStep(mClickedStepPosition);
-        addStepDetailsFragment();
+        addStepDetailsFragment(fragmentAdded);
     }
 
     private void getDataForSpecificStep(int position) {
@@ -75,7 +83,7 @@ public class StepDetailsActivity extends AppCompatActivity implements OnBackButt
         Objects.requireNonNull(getSupportActionBar()).setTitle(title);
     }
 
-    private void addStepDetailsFragment() {
+    private void addStepDetailsFragment(boolean fragmentExist) {
         // Main step details fragment
         stepDetailsFragment = new StepDetailsFragment();
         stepDetailsFragment.setArguments(makeStepDetailsBundle());
@@ -89,16 +97,16 @@ public class StepDetailsActivity extends AppCompatActivity implements OnBackButt
         exoPlayerFragment.setArguments(makeExoPlayerBundle());
 
         // Choose a method delivery data to fragment. For new view: "add", for existed view "replace"
-        if (fragmentManager == null) {
-            fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    // Deliver data to specific fragments
+        FragmentManager fm = getSupportFragmentManager();
+        if(!fragmentExist){
+            fm.beginTransaction()
                     .add(R.id.step_details_container, stepDetailsFragment)
                     .add(R.id.step_full_desc_container, descriptionFragment)
                     .add(R.id.exo_player_container, exoPlayerFragment)
                     .commit();
+            fragmentAdded = true;
         } else {
-            fragmentManager.beginTransaction()
+            fm.beginTransaction()
                     .replace(R.id.step_details_container, stepDetailsFragment)
                     .replace(R.id.step_full_desc_container, descriptionFragment)
                     .replace(R.id.exo_player_container, exoPlayerFragment)
@@ -145,23 +153,30 @@ public class StepDetailsActivity extends AppCompatActivity implements OnBackButt
 
     @Override
     public void onBackButtonClicked(int newPositionValue) {
-        Toast.makeText(this, "BACK clicked, position: " + newPositionValue, Toast.LENGTH_SHORT).show();
-        mAdjustedStepPosition = newPositionValue;
-        getDataForSpecificStep(mAdjustedStepPosition);
-        addStepDetailsFragment();
+        Toast.makeText(this, "Previous step", Toast.LENGTH_SHORT).show();
+        mClickedStepPosition = newPositionValue;
+        getDataForSpecificStep(mClickedStepPosition);
+        addStepDetailsFragment(fragmentAdded);
     }
 
     @Override
     public void onNextButtonClicked(int newPositionValue) {
-        Toast.makeText(this, "NEXT clicked, position: " + newPositionValue, Toast.LENGTH_SHORT).show();
-        mAdjustedStepPosition = newPositionValue;
-        getDataForSpecificStep(mAdjustedStepPosition);
-        addStepDetailsFragment();
+        Toast.makeText(this, "Next step" , Toast.LENGTH_SHORT).show();
+        mClickedStepPosition = newPositionValue;
+        getDataForSpecificStep(mClickedStepPosition);
+        addStepDetailsFragment(fragmentAdded);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         exoPlayerFragment.onPause();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("fragment_added", fragmentAdded);
+        outState.putInt("clicked_step_position", mClickedStepPosition);
     }
 }

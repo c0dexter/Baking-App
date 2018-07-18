@@ -21,8 +21,8 @@ import pl.michaldobrowolski.bakingapp.api.model.pojo.Ingredient;
 import pl.michaldobrowolski.bakingapp.ui.adapters.RecipeIngredientListAdapter;
 
 public class IngredientListFragment extends Fragment implements RecipeIngredientListAdapter.IngredientListAdapterOnClickHandler {
+    // -------------------- Properties --------------------//
     private final String TAG = this.getClass().getSimpleName();
-
     // Bundle keys
     private static final String BUNDLE_INGREDIENTS_LIST_KEY = "ingredient_list";
     private static final String BUNDLE_RECIPE_NAME_KEY = "recipe_name";
@@ -30,7 +30,6 @@ public class IngredientListFragment extends Fragment implements RecipeIngredient
     private Context mContext;
     private ArrayList<Ingredient> mIngredientList = new ArrayList<>();
     private String mRecipeName;
-
     // ------------------ End Of Properties ------------------ //
 
     // Fragment must have: an empty constructor
@@ -64,6 +63,7 @@ public class IngredientListFragment extends Fragment implements RecipeIngredient
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
+        // Adapter + Rv
         RecipeIngredientListAdapter mAdapter = new RecipeIngredientListAdapter(IngredientListFragment.this, mIngredientList);
         mRecyclerView.setAdapter(mAdapter);
 
