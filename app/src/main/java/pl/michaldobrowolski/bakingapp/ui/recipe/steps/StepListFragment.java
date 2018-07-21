@@ -21,6 +21,8 @@ import pl.michaldobrowolski.bakingapp.R;
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Step;
 import pl.michaldobrowolski.bakingapp.ui.adapters.RecipeStepListAdapter;
 import pl.michaldobrowolski.bakingapp.ui.recipe.steps.details.StepDetailsActivity;
+import pl.michaldobrowolski.bakingapp.ui.recipe.steps.details.StepDetailsDescFragment;
+import pl.michaldobrowolski.bakingapp.ui.recipe.steps.details.StepDetailsExoPlayerFragment;
 
 public class StepListFragment extends Fragment implements RecipeStepListAdapter.StepListAdapterOnClickHandler {
     // ------------------ Properties ------------------ //
@@ -32,6 +34,10 @@ public class StepListFragment extends Fragment implements RecipeStepListAdapter.
     private Context mContext;
     private ArrayList<Step> mStepList = new ArrayList<>();
     private String mRecipeName;
+    private boolean mTwoPan;
+    private StepDetailsDescFragment mStepDetailsDescFragment;
+    private StepDetailsExoPlayerFragment mStepDetailsExoPlayerFragment;
+
     // ------------------ End Of Properties ------------------ //
 
     // Fragment must have: an empty constructor

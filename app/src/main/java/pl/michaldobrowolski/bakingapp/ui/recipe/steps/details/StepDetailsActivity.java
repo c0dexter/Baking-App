@@ -5,6 +5,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -40,6 +43,7 @@ public class StepDetailsActivity extends AppCompatActivity implements OnBackButt
     private StepDetailsExoPlayerFragment exoPlayerFragment;
     private UtilityHelper utilityHelper = new UtilityHelper();
     private boolean fragmentAdded;
+    private boolean mTwoPane;
     // ------------------ End Of Properties ------------------ //
 
     @Override
@@ -47,6 +51,21 @@ public class StepDetailsActivity extends AppCompatActivity implements OnBackButt
         super.onCreate(savedInstanceState);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_step_detail);
+
+        if(findViewById(R.id.steps_activity_tablet_layout) != null) {
+            mTwoPane = true;
+
+            // Hide elements for tablet view
+            ImageButton buttonNext = (ImageButton) findViewById(R.id.button_next_step);
+            buttonNext.setVisibility(View.GONE);
+            ImageButton buttonPrevious = (ImageButton) findViewById(R.id.button_previous_step);
+            buttonPrevious.setVisibility(View.GONE);
+            TextView stepCounter = (TextView) findViewById(R.id.text_step_counter);
+            stepCounter.setVisibility(View.GONE);
+
+        } else {
+            mTwoPane = false;
+        }
 
         // Get data from bundle
         getStepDetailsDataFromBundle(

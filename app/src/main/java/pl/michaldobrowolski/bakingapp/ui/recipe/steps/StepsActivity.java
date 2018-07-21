@@ -8,6 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -17,6 +20,8 @@ import pl.michaldobrowolski.bakingapp.R;
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Ingredient;
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Recipe;
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Step;
+import pl.michaldobrowolski.bakingapp.ui.recipe.steps.details.StepDetailsDescFragment;
+import pl.michaldobrowolski.bakingapp.ui.recipe.steps.details.StepDetailsExoPlayerFragment;
 import pl.michaldobrowolski.bakingapp.ui.recipe.steps.ingredeints.IngredientsActivity;
 
 public class StepsActivity extends AppCompatActivity {
@@ -31,7 +36,9 @@ public class StepsActivity extends AppCompatActivity {
     private Recipe mRecipe;
     private ArrayList<Step> mStepList = new ArrayList<>();
     private ArrayList<Ingredient> mIngredientList = new ArrayList<>();
-    private boolean fragmentAdded;
+    private boolean mFragmentAdded;
+
+
     // ------------------ End Of Properties ------------------ //
 
     @Override
@@ -39,11 +46,6 @@ public class StepsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_steps);
-
-        // Check if saved instance state exist and set a fragmentAdded flag
-        if (savedInstanceState != null) {
-            fragmentAdded = savedInstanceState.getBoolean("fragment_added");
-        }
 
         bundle = getIntent().getExtras();
         stepsBundle = new Bundle();
@@ -59,7 +61,7 @@ public class StepsActivity extends AppCompatActivity {
         ingredientsBundle.putParcelableArrayList("ingredient_list", mIngredientList);
         ingredientsBundle.putString("recipe_name", mRecipe.getmName());
 
-        addStepListFragment(fragmentAdded);
+        addStepListFragment(mFragmentAdded);
 
         // Attach the Bundle to an intent
         final Intent ingredientIntent = new Intent(this, IngredientsActivity.class);
@@ -92,7 +94,7 @@ public class StepsActivity extends AppCompatActivity {
             fm.beginTransaction()
                     .add(R.id.steps_list_container, stepListFragment)
                     .commit();
-            fragmentAdded = true;
+            mFragmentAdded = true;
         } else {
             fm.beginTransaction()
                     .replace(R.id.steps_list_container, stepListFragment)
@@ -142,6 +144,6 @@ public class StepsActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean("fragment_added", fragmentAdded);
+        outState.putBoolean("fragment_added", mFragmentAdded);
     }
 }
