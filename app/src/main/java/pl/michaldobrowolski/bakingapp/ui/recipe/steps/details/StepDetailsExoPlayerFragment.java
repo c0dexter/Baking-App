@@ -77,7 +77,7 @@ public class StepDetailsExoPlayerFragment extends Fragment {
         switchThumbUrlToVideoUrl(mThumbnailUrl);
 
         // ExoPlayer
-        showOrHideExoPlayer(mPlayerView, mDefaultStepImage);
+        //showOrHideExoPlayer(mPlayerView, mDefaultStepImage);
 
         return rootView;
     }

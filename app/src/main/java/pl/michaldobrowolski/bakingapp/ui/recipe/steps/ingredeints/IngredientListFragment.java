@@ -24,7 +24,7 @@ public class IngredientListFragment extends Fragment implements RecipeIngredient
     // -------------------- Properties --------------------//
     private final String TAG = this.getClass().getSimpleName();
     // Bundle keys
-    private static final String BUNDLE_INGREDIENTS_LIST_KEY = "ingredient_list";
+    private static final String BUNDLE_INGREDIENTS_LIST_KEY = "fragment_ingredient_list";
     private static final String BUNDLE_RECIPE_NAME_KEY = "recipe_name";
     // Properties
     private Context mContext;

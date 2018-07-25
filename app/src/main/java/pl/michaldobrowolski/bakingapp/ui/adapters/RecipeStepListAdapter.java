@@ -29,7 +29,7 @@ public class RecipeStepListAdapter extends RecyclerView.Adapter<RecipeStepListAd
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_step_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.step_item, parent, false);
         view.setFocusable(true);
         return new RecipeStepListAdapter.ViewHolder(view);
     }
@@ -75,12 +75,4 @@ public class RecipeStepListAdapter extends RecyclerView.Adapter<RecipeStepListAd
             stepListAdapterOnClickHandler.onClickStep(stepPosition);
         }
     }
-
-    // ----- TEMPORARY REJECTED ------ //
-//    public void setSteps(List<Step> steps) {
-//        this.mStepList.clear();
-//        this.mStepList.addAll(steps);
-//        notifyDataSetChanged();
-//    }
-
 }

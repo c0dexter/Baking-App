@@ -34,10 +34,6 @@ public class StepListFragment extends Fragment implements RecipeStepListAdapter.
     private Context mContext;
     private ArrayList<Step> mStepList = new ArrayList<>();
     private String mRecipeName;
-    private boolean mTwoPan;
-    private StepDetailsDescFragment mStepDetailsDescFragment;
-    private StepDetailsExoPlayerFragment mStepDetailsExoPlayerFragment;
-
     // ------------------ End Of Properties ------------------ //
 
     // Fragment must have: an empty constructor

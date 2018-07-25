@@ -9,7 +9,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 
 import pl.michaldobrowolski.bakingapp.R;
 
@@ -17,8 +21,22 @@ public class StepDetailsDescFragment extends Fragment {
 
     // -------------------- Properties --------------------//
     final static String TAG = StepDetailsDescFragment.class.getSimpleName();
+    // Bundle keys: Video
+    private static final String BUNDLE_VIDEO_URL_KEY = "video_url_bundle";
+    private static final String BUNDLE_VIDEO_THUMB_URL_KEY = "thumbnail_url_bundle";
+
+    private static final String BUNDLE_STEP_ID_KEY = "step_id_bundle_key";
+    private static final String BUNDLE_RECIPE_TOTAL_STEPS_AMOUNT_KEY = "total_steps_bundle_key";
+    private static final String BUNDLE_RECIPE_NAME_KEY = "recipe_name_bundle_key";
+    private static final String BUNDLE_DESCRIPTION_KEY = "desc_bundle";
     // Fields
     private Context mContext;
+    private String mVideoUrl;
+    private String mThumbnailUrl;
+    private SimpleExoPlayer mExoPlayer;
+    private SimpleExoPlayerView mPlayerView;
+    private ImageView mDefaultStepImage;
+    private long mMediaLength;
     private String mDescription;
     // ------------------ End Of Properties ------------------ //
 
@@ -39,7 +57,7 @@ public class StepDetailsDescFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         // Set a root view
-        final View rootView = inflater.inflate(R.layout.fragment_step_detail_full_desc_item, container, false); //fragment_step_detail_vertical
+        final View rootView = inflater.inflate(R.layout.fragment_step_detail_video_and_desc_vertical, container, false); //fragment_step_detail_vertical
 
         // Get data from StepDetailActivity
         getDataFromBundle();
@@ -53,8 +71,8 @@ public class StepDetailsDescFragment extends Fragment {
 
     private void getDataFromBundle() {
         Bundle stepDetailBundle = getArguments();
-        if (stepDetailBundle != null && stepDetailBundle.containsKey("desc_bundle")) {
-            mDescription = stepDetailBundle.getString("desc_bundle");
+        if (stepDetailBundle != null && stepDetailBundle.containsKey(BUNDLE_DESCRIPTION_KEY)) {
+            mDescription = stepDetailBundle.getString(BUNDLE_DESCRIPTION_KEY);
         } else {
             Log.i(TAG, "Incorrect bundle key!");
         }

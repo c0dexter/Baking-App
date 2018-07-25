@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/steps_activity_tablet_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    tools:context=".ui.recipe.steps.StepsActivity">
 
     <LinearLayout
         android:layout_width="0dp"
@@ -49,7 +51,6 @@
 
         <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/steps_list_container"
-            android:name="pl.michaldobrowolski.bakingapp.ui.RecipeStepListFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
@@ -62,12 +63,9 @@
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/step_details_container"
-        android:name="pl.michaldobrowolski.bakingapp.ui.StepDetailsFragment"
         android:layout_width="0dp"
         android:layout_weight="2"
-        android:layout_height="match_parent">
-
-    </FrameLayout>
+        android:layout_height="match_parent" />
 
 </LinearLayout>
 

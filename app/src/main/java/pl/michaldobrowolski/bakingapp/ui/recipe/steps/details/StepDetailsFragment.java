@@ -2,6 +2,7 @@ package pl.michaldobrowolski.bakingapp.ui.recipe.steps.details;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,7 +12,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.android.exoplayer2.C;
+import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.LoadControl;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelector;
+import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
+import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
 
 import java.util.Objects;
 
@@ -22,21 +39,30 @@ public class StepDetailsFragment extends Fragment {
 
     // -------------------- Properties --------------------//
     // Bundle keys
+    private static final String BUNDLE_DESCRIPTION_KEY = "desc_bundle";
     private static final String BUNDLE_STEP_ID_KEY = "step_id_bundle_key";
     private static final String BUNDLE_RECIPE_TOTAL_STEPS_AMOUNT_KEY = "total_steps_bundle_key";
     private static final String BUNDLE_RECIPE_NAME_KEY = "recipe_name_bundle_key";
-    // Listeners
-    OnBackButtonClickedListener mBackButtonCallback;
-    OnNextButtonClickedListener mNextButtonOnClickListener;
+    private static final String BUNDLE_VIDEO_URL_KEY = "video_url_bundle";
+    private static final String BUNDLE_VIDEO_THUMB_URL_KEY = "thumbnail_url_bundle";
     // Fields
     private Context mContext;
     private int mStepId;
     private int mTotalStepsAmount;
     private int mCurrentStep;
+    private String mDescription;
     private String mRecipeName;
+    private String mVideoUrl;
+    private String mThumbnailUrl;
+
     private TextView mStepCounterTv;
-    private ImageButton backBtn;
-    private ImageButton nextBtn;
+    TextView fullDescTv;
+
+    private SimpleExoPlayer mExoPlayer;
+    private SimpleExoPlayerView mPlayerView;
+    private ImageView mDefaultStepImage;
+    private long mMediaLength;
+
     private Bundle stepDetailBundle;
     // ------------------ End Of Properties ------------------ //
 
@@ -49,20 +75,6 @@ public class StepDetailsFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         mContext = context;
-
-        try {
-            mBackButtonCallback = (OnBackButtonClickedListener) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString()
-                    + " must implement OnBackButtonClickedListener");
-        }
-
-        try {
-            mNextButtonOnClickListener = (OnNextButtonClickedListener) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString()
-                    + " must implement OnNextButtonClickedListener");
-        }
     }
 
     // Fragment must have: onCreateView
@@ -75,6 +87,16 @@ public class StepDetailsFragment extends Fragment {
 
         // Set a root view
         View rootView = checkScreenOrientationAndSetRootView(inflater, container);
+
+        // Mapping views
+        mPlayerView = rootView.findViewById(R.id.playerView);
+        mDefaultStepImage = rootView.findViewById(R.id.defaultStepImage);
+
+        // Verify and populate a correct Video URL by using thumb url (for consistence)
+        switchThumbUrlToVideoUrl(mThumbnailUrl);
+
+        // ExoPlayer
+        showOrHideExoPlayer(mPlayerView, mDefaultStepImage);
 
         return rootView;
     }
@@ -93,80 +115,91 @@ public class StepDetailsFragment extends Fragment {
                             View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
                             View.SYSTEM_UI_FLAG_FULLSCREEN;
             rootView.setSystemUiVisibility(uiOptions);
-            rootView = inflater.inflate(R.layout.fragment_step_detail_horizontal, container, false);
+            rootView = inflater.inflate(R.layout.fragment_step_detail_video_and_desc_horizontal, container, false); // COMPLETED: Here put the new layout with merged Exo and Desc
 
         } else {
             Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).show();
-            rootView = inflater.inflate(R.layout.fragment_step_detail_vertical, container, false);
+            rootView = inflater.inflate(R.layout.fragment_step_detail_video_and_desc_vertical, container, false);
+
+            fullDescTv = rootView.findViewById(R.id.text_step_full_desc);
+            fullDescTv.setText(mDescription);
 
             // Set a title on NavBar
             ((StepDetailsActivity) Objects.requireNonNull(getActivity()))
                     .setActionBarTitle(mRecipeName + "'s instructions");
-
-            // Mapping views
-            backBtn = rootView.findViewById(R.id.button_previous_step);
-            nextBtn = rootView.findViewById(R.id.button_next_step);
-            mStepCounterTv = rootView.findViewById(R.id.text_step_counter);
-
-            setStepsCounter(mStepId, mTotalStepsAmount);
-            showOrHideNavigationButtons();
-
-            // Handling actions on BACK / NEXT button
-            backBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mBackButtonCallback.onBackButtonClicked(mCurrentStep - 1);
-                }
-            });
-
-            nextBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mNextButtonOnClickListener.onNextButtonClicked(mCurrentStep + 1);
-                }
-            });
         }
         return rootView;
     }
 
-    private void setStepsCounter(int stepId, int totalStepsAmount) {
-        mCurrentStep = stepId;
-        int currentStep = stepId + 1; // Add +1 to the real values, because of UX
-
-        String counterValue = currentStep + "/" + totalStepsAmount;
-        mStepCounterTv.setText(counterValue);
-    }
-
-    private void showOrHideNavigationButtons() {
-        // Last step verification
-        if (mCurrentStep + 1 >= mTotalStepsAmount) {
-            nextBtn.setVisibility(View.INVISIBLE);
-        } else {
-            nextBtn.setVisibility(View.VISIBLE);
-        }
-
-        // First step verification
-        if (mCurrentStep - 1 < 0) {
-            backBtn.setVisibility(View.INVISIBLE);
-        } else {
-            backBtn.setVisibility(View.VISIBLE);
-        }
-    }
-
     private void getDataFromBundle() {
         stepDetailBundle = getArguments();
+        mRecipeName = stepDetailBundle.getString(BUNDLE_RECIPE_NAME_KEY);
+        mDescription = stepDetailBundle.getString(BUNDLE_DESCRIPTION_KEY);
+        mVideoUrl = stepDetailBundle.getString(BUNDLE_VIDEO_URL_KEY);
+        mThumbnailUrl = stepDetailBundle.getString(BUNDLE_VIDEO_THUMB_URL_KEY);
         mStepId = Objects.requireNonNull(stepDetailBundle).getInt(BUNDLE_STEP_ID_KEY);
         mTotalStepsAmount = stepDetailBundle.getInt(BUNDLE_RECIPE_TOTAL_STEPS_AMOUNT_KEY);
-        mRecipeName = stepDetailBundle.getString(BUNDLE_RECIPE_NAME_KEY);
     }
 
-    // Container Activity must implement this interface
-    public interface OnBackButtonClickedListener {
-        void onBackButtonClicked(int position);
+    private void switchThumbUrlToVideoUrl(String thumbUrl) {
+        if (!thumbUrl.equals("")) {
+            mVideoUrl = thumbUrl;
+        }
     }
 
-    // Container Activity must implement this interface
-    public interface OnNextButtonClickedListener {
-        void onNextButtonClicked(int position);
+    private void showOrHideExoPlayer(SimpleExoPlayerView exoPlayerView, ImageView defaultImage) {
+        if (mVideoUrl.equals("") || mVideoUrl == null) {
+            exoPlayerView.setVisibility(View.GONE);
+            defaultImage.setVisibility(View.VISIBLE);
+            defaultImage.setImageResource(R.drawable.defaultstepimage);
+        } else {
+            exoPlayerView.setVisibility(View.VISIBLE);
+            defaultImage.setVisibility(View.GONE);
+            initializePlayer(Uri.parse(mVideoUrl));
+        }
     }
+
+    void initializePlayer(Uri mediaUri) {
+        if (mExoPlayer == null) {
+            // Create an instance of the SimpleExoPlayer
+            TrackSelector trackSelector = new DefaultTrackSelector();
+            LoadControl loadControl = new DefaultLoadControl();
+            mExoPlayer = ExoPlayerFactory.newSimpleInstance(mContext, trackSelector, loadControl);
+            mExoPlayer.setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);        // Handling full screen mode
+            mPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FILL);                     // Handling full screen mode
+            mPlayerView.setPlayer(mExoPlayer);
+
+            // Prepare MediaSource
+            String userAgent = Util.getUserAgent(mContext, "BakingApp");
+            MediaSource mediaSource = new ExtractorMediaSource(
+                    mediaUri,
+                    new DefaultDataSourceFactory(mContext, userAgent),
+                    new DefaultExtractorsFactory(),
+                    null,
+                    null);
+            mExoPlayer.prepare(mediaSource);
+            mExoPlayer.setPlayWhenReady(true);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mExoPlayer != null) {
+            mMediaLength = mExoPlayer.getCurrentPosition();
+            mExoPlayer.stop();
+            mExoPlayer.release();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mExoPlayer != null) {
+            mExoPlayer.seekTo(mMediaLength);
+            mExoPlayer.setPlayWhenReady(true);
+        }
+    }
+
+
 }

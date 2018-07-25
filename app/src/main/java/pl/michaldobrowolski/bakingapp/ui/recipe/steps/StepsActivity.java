@@ -22,6 +22,7 @@ import pl.michaldobrowolski.bakingapp.api.model.pojo.Recipe;
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Step;
 import pl.michaldobrowolski.bakingapp.ui.recipe.steps.details.StepDetailsDescFragment;
 import pl.michaldobrowolski.bakingapp.ui.recipe.steps.details.StepDetailsExoPlayerFragment;
+import pl.michaldobrowolski.bakingapp.ui.recipe.steps.details.StepDetailsFragment;
 import pl.michaldobrowolski.bakingapp.ui.recipe.steps.ingredeints.IngredientsActivity;
 
 public class StepsActivity extends AppCompatActivity {
@@ -38,6 +39,9 @@ public class StepsActivity extends AppCompatActivity {
     private ArrayList<Ingredient> mIngredientList = new ArrayList<>();
     private boolean mFragmentAdded;
 
+    private StepDetailsFragment stepDetailsFragment;
+    private boolean mStepDetailsFragmentsExists;
+    boolean mTwoPane;
 
     // ------------------ End Of Properties ------------------ //
 
@@ -46,6 +50,10 @@ public class StepsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_steps);
+
+        if(savedInstanceState != null){
+            mFragmentAdded = savedInstanceState.getBoolean("fragment_added");
+        }
 
         bundle = getIntent().getExtras();
         stepsBundle = new Bundle();
@@ -58,10 +66,19 @@ public class StepsActivity extends AppCompatActivity {
         // https://discussions.udacity.com/t/doubt-put-list-object-in-bundle/263599/8
         stepsBundle.putParcelableArrayList("steps_list", mStepList);
         stepsBundle.putString("recipe_name", mRecipe.getmName());
-        ingredientsBundle.putParcelableArrayList("ingredient_list", mIngredientList);
+        ingredientsBundle.putParcelableArrayList("fragment_ingredient_list", mIngredientList);
         ingredientsBundle.putString("recipe_name", mRecipe.getmName());
 
         addStepListFragment(mFragmentAdded);
+
+        if(findViewById(R.id.steps_activity_tablet_layout) != null) {
+            mTwoPane = true;
+
+
+
+        } else {
+            mTwoPane = false;
+        }
 
         // Attach the Bundle to an intent
         final Intent ingredientIntent = new Intent(this, IngredientsActivity.class);
@@ -100,7 +117,6 @@ public class StepsActivity extends AppCompatActivity {
                     .replace(R.id.steps_list_container, stepListFragment)
                     .commit();
         }
-
     }
 
     public void setActionBarTitle(String title) {

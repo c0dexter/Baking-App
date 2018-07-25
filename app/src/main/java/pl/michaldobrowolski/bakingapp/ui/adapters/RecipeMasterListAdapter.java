@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,7 +30,7 @@ public class RecipeMasterListAdapter extends RecyclerView.Adapter<RecipeMasterLi
     @NonNull
     @Override
     public RecipeMasterListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_recipe_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_item, parent, false);
         view.setFocusable(true);
         return new ViewHolder(view);
     }

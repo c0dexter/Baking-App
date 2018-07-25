@@ -1,5 +1,6 @@
 package pl.michaldobrowolski.bakingapp.ui.recipe.steps.details;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
@@ -7,8 +8,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -18,10 +22,8 @@ import pl.michaldobrowolski.bakingapp.api.model.pojo.Step;
 import pl.michaldobrowolski.bakingapp.ui.recipe.steps.StepsActivity;
 import pl.michaldobrowolski.bakingapp.utils.UtilityHelper;
 
-import static pl.michaldobrowolski.bakingapp.ui.recipe.steps.details.StepDetailsFragment.OnBackButtonClickedListener;
-import static pl.michaldobrowolski.bakingapp.ui.recipe.steps.details.StepDetailsFragment.OnNextButtonClickedListener;
 
-public class StepDetailsActivity extends AppCompatActivity implements OnBackButtonClickedListener, OnNextButtonClickedListener {
+public class StepDetailsActivity extends AppCompatActivity { //implements OnBackButtonClickedListener, OnNextButtonClickedListener
     // -------------------- Properties --------------------//
     final static String TAG = StepsActivity.class.getSimpleName();
     // Bundle keys
@@ -30,7 +32,7 @@ public class StepDetailsActivity extends AppCompatActivity implements OnBackButt
     private static final String BUNDLE_STEP_ID_KEY = "step_position_bundle_key";
     private static final String BUNDLE_RECIPE_NAME_KEY = "recipe_name_bundle_key";
     // Fields
-    private int mClickedStepPosition;
+    private int mCurrentStep;
     private String mRecipeName;
     private ArrayList<Step> mStepArrayList;
     private int mTotalStepsAmount;
@@ -39,11 +41,13 @@ public class StepDetailsActivity extends AppCompatActivity implements OnBackButt
     private String mVideoUrl;
     private String mThumbnailUrl;
     private StepDetailsFragment stepDetailsFragment;
-    private StepDetailsDescFragment descriptionFragment;
-    private StepDetailsExoPlayerFragment exoPlayerFragment;
     private UtilityHelper utilityHelper = new UtilityHelper();
     private boolean fragmentAdded;
-    private boolean mTwoPane;
+
+    public TextView mStepCounterTv;
+    public ImageButton backBtn;
+    public ImageButton nextBtn;
+
     // ------------------ End Of Properties ------------------ //
 
     @Override
@@ -52,20 +56,11 @@ public class StepDetailsActivity extends AppCompatActivity implements OnBackButt
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_step_detail);
 
-        if(findViewById(R.id.steps_activity_tablet_layout) != null) {
-            mTwoPane = true;
-
-            // Hide elements for tablet view
-            ImageButton buttonNext = (ImageButton) findViewById(R.id.button_next_step);
-            buttonNext.setVisibility(View.GONE);
-            ImageButton buttonPrevious = (ImageButton) findViewById(R.id.button_previous_step);
-            buttonPrevious.setVisibility(View.GONE);
-            TextView stepCounter = (TextView) findViewById(R.id.text_step_counter);
-            stepCounter.setVisibility(View.GONE);
-
-        } else {
-            mTwoPane = false;
-        }
+        // Mapping
+        mStepCounterTv = findViewById(R.id.text_step_counter);
+        backBtn = findViewById(R.id.button_previous_step);
+        nextBtn = findViewById(R.id.button_next_step);
+;
 
         // Get data from bundle
         getStepDetailsDataFromBundle(
@@ -75,13 +70,32 @@ public class StepDetailsActivity extends AppCompatActivity implements OnBackButt
                 BUNDLE_RECIPE_NAME_KEY);
 
         // Check if saved instance state exist and set a fragmentAdded flag
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             fragmentAdded = savedInstanceState.getBoolean("fragment_added");
-            mClickedStepPosition = savedInstanceState.getInt("clicked_step_position");
+            mCurrentStep = savedInstanceState.getInt("clicked_step_position");
         }
 
-        getDataForSpecificStep(mClickedStepPosition);
+        getDataForSpecificStep(mCurrentStep);
         addStepDetailsFragment(fragmentAdded);
+
+        // Logic for UI elements
+        setStepsCounter(mCurrentStep, mStepArrayList.size());
+        showOrHideNavigationButtons();
+
+        // Navigation buttons logic
+        nextBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onNextButtonClicked(mCurrentStep + 1);
+            }
+        });
+
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackButtonClicked(mCurrentStep - 1);
+            }
+        });
     }
 
     private void getDataForSpecificStep(int position) {
@@ -107,28 +121,16 @@ public class StepDetailsActivity extends AppCompatActivity implements OnBackButt
         stepDetailsFragment = new StepDetailsFragment();
         stepDetailsFragment.setArguments(makeStepDetailsBundle());
 
-        // Full description fragment
-        descriptionFragment = new StepDetailsDescFragment();
-        descriptionFragment.setArguments(makeFullDescBundle());
-
-        // ExoPlayer Fragment
-        exoPlayerFragment = new StepDetailsExoPlayerFragment();
-        exoPlayerFragment.setArguments(makeExoPlayerBundle());
-
         // Choose a method delivery data to fragment. For new view: "add", for existed view "replace"
         FragmentManager fm = getSupportFragmentManager();
-        if(!fragmentExist){
+        if (!fragmentExist) {
             fm.beginTransaction()
                     .add(R.id.step_details_container, stepDetailsFragment)
-                    .add(R.id.step_full_desc_container, descriptionFragment)
-                    .add(R.id.exo_player_container, exoPlayerFragment)
                     .commit();
             fragmentAdded = true;
         } else {
             fm.beginTransaction()
                     .replace(R.id.step_details_container, stepDetailsFragment)
-                    .replace(R.id.step_full_desc_container, descriptionFragment)
-                    .replace(R.id.exo_player_container, exoPlayerFragment)
                     .commit();
         }
     }
@@ -139,7 +141,7 @@ public class StepDetailsActivity extends AppCompatActivity implements OnBackButt
             if (stepDetailBundle.containsKey(mainBundleKey)) {
                 stepDetailBundle = stepDetailBundle.getBundle(mainBundleKey);
                 mStepArrayList = Objects.requireNonNull(stepDetailBundle).getParcelableArrayList(StepsArrayKey);
-                mClickedStepPosition = Objects.requireNonNull(stepDetailBundle).getInt(stepPositionClicked);
+                mCurrentStep = Objects.requireNonNull(stepDetailBundle).getInt(stepPositionClicked);
                 mRecipeName = stepDetailBundle.getString(recipeNameKey);
             } else {
                 Log.i(TAG, "Cannot get object from bundle. Incorrect bundle key string.");
@@ -154,48 +156,72 @@ public class StepDetailsActivity extends AppCompatActivity implements OnBackButt
         stepDetailsBundle.putInt("step_id_bundle_key", mStepId);
         stepDetailsBundle.putInt("total_steps_bundle_key", mTotalStepsAmount);
         stepDetailsBundle.putString("recipe_name_bundle_key", mRecipeName);
+        stepDetailsBundle.putString("desc_bundle", utilityHelper.removeRedundantCharactersFromText("^(\\d*.\\s)", mDescription));
+        stepDetailsBundle.putString("video_url_bundle", mVideoUrl);
+        stepDetailsBundle.putString("thumbnail_url_bundle", mThumbnailUrl);
+
         return stepDetailsBundle;
     }
 
-    private Bundle makeFullDescBundle() {
-        Bundle fullDescBundle = new Bundle();
-        fullDescBundle.putString("desc_bundle", utilityHelper.removeRedundantCharactersFromText("^(\\d*.\\s)",mDescription));
-        return fullDescBundle;
-    }
-
-    private Bundle makeExoPlayerBundle() {
-        Bundle videoBundle = new Bundle();
-        videoBundle.putString("video_url_bundle", mVideoUrl);
-        videoBundle.putString("thumbnail_url_bundle", mThumbnailUrl);
-        return videoBundle;
-    }
-
-    @Override
     public void onBackButtonClicked(int newPositionValue) {
         Toast.makeText(this, "Previous step", Toast.LENGTH_SHORT).show();
-        mClickedStepPosition = newPositionValue;
-        getDataForSpecificStep(mClickedStepPosition);
+        mCurrentStep = newPositionValue;
+        getDataForSpecificStep(mCurrentStep);
         addStepDetailsFragment(fragmentAdded);
+        setStepsCounter(mCurrentStep, mStepArrayList.size());
+        showOrHideNavigationButtons();
     }
 
-    @Override
     public void onNextButtonClicked(int newPositionValue) {
-        Toast.makeText(this, "Next step" , Toast.LENGTH_SHORT).show();
-        mClickedStepPosition = newPositionValue;
-        getDataForSpecificStep(mClickedStepPosition);
+        Toast.makeText(this, "Next step", Toast.LENGTH_SHORT).show();
+        mCurrentStep = newPositionValue;
+        getDataForSpecificStep(mCurrentStep);
         addStepDetailsFragment(fragmentAdded);
+        setStepsCounter(mCurrentStep, mStepArrayList.size());
+        showOrHideNavigationButtons();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        exoPlayerFragment.onPause();
+        stepDetailsFragment.onPause();
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        stepDetailsFragment.onResume();
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean("fragment_added", fragmentAdded);
-        outState.putInt("clicked_step_position", mClickedStepPosition);
+        outState.putInt("clicked_step_position", mCurrentStep);
+    }
+
+
+    private void setStepsCounter(int stepId, int totalStepsAmount) {
+        mCurrentStep = stepId;
+        int currentStep = stepId + 1; // Add +1 to the real values, because of UX
+
+        String counterValue = currentStep + "/" + totalStepsAmount;
+        mStepCounterTv.setText(counterValue);
+    }
+
+    private void showOrHideNavigationButtons() {
+        // Last step verification
+        if (mCurrentStep + 1 >= mTotalStepsAmount) {
+            nextBtn.setVisibility(View.INVISIBLE);
+        } else {
+            nextBtn.setVisibility(View.VISIBLE);
+        }
+
+        // First step verification
+        if (mCurrentStep - 1 < 0) {
+            backBtn.setVisibility(View.INVISIBLE);
+        } else {
+            backBtn.setVisibility(View.VISIBLE);
+        }
     }
 }
