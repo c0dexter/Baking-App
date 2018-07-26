@@ -17,6 +17,7 @@ import pl.michaldobrowolski.bakingapp.R;
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Ingredient;
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Recipe;
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Step;
+import pl.michaldobrowolski.bakingapp.ui.recipe.steps.details.StepDetailsActivity;
 import pl.michaldobrowolski.bakingapp.ui.recipe.steps.details.StepDetailsFragment;
 import pl.michaldobrowolski.bakingapp.ui.recipe.steps.ingredeints.IngredientsActivity;
 
@@ -35,6 +36,7 @@ public class StepsActivity extends AppCompatActivity {
     private boolean mFragmentAdded;
 
     private StepDetailsFragment stepDetailsFragment;
+    private StepListFragment stepListFragment;
     private boolean mStepDetailsFragmentsExists;
     boolean mTwoPane;
 
@@ -71,10 +73,13 @@ public class StepsActivity extends AppCompatActivity {
 
             if(savedInstanceState == null){
                 FragmentManager fragmentManager = getSupportFragmentManager();
-                StepDetailsFragment stepDetailsFragment = new StepDetailsFragment();
+                stepDetailsFragment = new StepDetailsFragment();
+                stepDetailsFragment.setArguments(sendDefaultData());
+
                 fragmentManager.beginTransaction()
                         .add(R.id.step_details_container, stepDetailsFragment)
                         .commit();
+
             }
 
         } else {
@@ -95,6 +100,18 @@ public class StepsActivity extends AppCompatActivity {
                 startActivity(ingredientIntent);
             }
         });
+    }
+
+    public Bundle sendDefaultData(){ // TODO: first step is working, I need to handle clicking on steps
+        Bundle stepDetailBundle = new Bundle();
+        stepDetailBundle.putString("recipe_name_bundle_key", mRecipe.getmName());
+        stepDetailBundle.putString("desc_bundle", mRecipe.getmSteps().get(0).getmDescription());
+        stepDetailBundle.putString("video_url_bundle", mRecipe.getmSteps().get(0).getmVideoURL());
+        stepDetailBundle.putString("thumbnail_url_bundle", mRecipe.getmSteps().get(0).getThumbnailURL());
+        stepDetailBundle.putInt("step_id_bundle_key", mRecipe.getmSteps().get(0).getId());
+        stepDetailBundle.putInt("total_steps_bundle_key", mRecipe.getmSteps().size());
+
+        return stepDetailBundle;
     }
 
     @Override

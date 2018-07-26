@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -45,6 +44,7 @@ public class StepDetailsFragment extends Fragment {
     private static final String BUNDLE_RECIPE_NAME_KEY = "recipe_name_bundle_key";
     private static final String BUNDLE_VIDEO_URL_KEY = "video_url_bundle";
     private static final String BUNDLE_VIDEO_THUMB_URL_KEY = "thumbnail_url_bundle";
+    TextView fullDescTv;
     // Fields
     private Context mContext;
     private int mStepId;
@@ -54,10 +54,7 @@ public class StepDetailsFragment extends Fragment {
     private String mRecipeName;
     private String mVideoUrl;
     private String mThumbnailUrl;
-
     private TextView mStepCounterTv;
-    TextView fullDescTv;
-
     private SimpleExoPlayer mExoPlayer;
     private SimpleExoPlayerView mPlayerView;
     private ImageView mDefaultStepImage;
@@ -82,8 +79,13 @@ public class StepDetailsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+
         // Get data from StepDetailActivity
         getDataFromBundle();
+
+        // Verify and populate a correct Video URL by using thumb url (for consistence)
+        switchThumbUrlToVideoUrl(mThumbnailUrl);
+
 
         // Set a root view
         View rootView = checkScreenOrientationAndSetRootView(inflater, container);
@@ -92,8 +94,6 @@ public class StepDetailsFragment extends Fragment {
         mPlayerView = rootView.findViewById(R.id.playerView);
         mDefaultStepImage = rootView.findViewById(R.id.defaultStepImage);
 
-        // Verify and populate a correct Video URL by using thumb url (for consistence)
-        switchThumbUrlToVideoUrl(mThumbnailUrl);
 
         // ExoPlayer
         showOrHideExoPlayer(mPlayerView, mDefaultStepImage);
@@ -125,8 +125,8 @@ public class StepDetailsFragment extends Fragment {
             fullDescTv.setText(mDescription);
 
             // Set a title on NavBar
-            ((StepDetailsActivity) Objects.requireNonNull(getActivity()))
-                    .setActionBarTitle(mRecipeName + "'s instructions");
+//            ((StepDetailsActivity) Objects.requireNonNull(getActivity()))
+//                    .setActionBarTitle(mRecipeName + "'s instructions");
         }
         return rootView;
     }
@@ -142,7 +142,7 @@ public class StepDetailsFragment extends Fragment {
     }
 
     private void switchThumbUrlToVideoUrl(String thumbUrl) {
-        if (!thumbUrl.equals("")) {
+        if (!thumbUrl.equals("") && thumbUrl != null) {
             mVideoUrl = thumbUrl;
         }
     }

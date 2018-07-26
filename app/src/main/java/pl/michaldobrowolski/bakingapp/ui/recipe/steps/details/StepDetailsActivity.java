@@ -97,7 +97,7 @@ public class StepDetailsActivity extends AppCompatActivity { //implements OnBack
         });
     }
 
-    private void getDataForSpecificStep(int position) {
+    public void getDataForSpecificStep(int position) {
         mTotalStepsAmount = mStepArrayList.size();
         mDescription = mStepArrayList.get(position).getmDescription();
         mVideoUrl = mStepArrayList.get(position).getmVideoURL();
