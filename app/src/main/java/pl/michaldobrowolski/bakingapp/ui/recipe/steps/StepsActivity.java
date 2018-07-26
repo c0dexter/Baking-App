@@ -37,6 +37,7 @@ public class StepsActivity extends AppCompatActivity {
     private StepDetailsFragment stepDetailsFragment;
     private boolean mStepDetailsFragmentsExists;
     boolean mTwoPane;
+
     // ------------------ End Of Properties ------------------ //
 
     @Override
@@ -66,6 +67,15 @@ public class StepsActivity extends AppCompatActivity {
         addStepListFragment(mFragmentAdded);
 
         if(findViewById(R.id.steps_activity_tablet_layout) != null) {
+            mTwoPane = true;
+
+            if(savedInstanceState == null){
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                StepDetailsFragment stepDetailsFragment = new StepDetailsFragment();
+                fragmentManager.beginTransaction()
+                        .add(R.id.step_video_desc_container, stepDetailsFragment)
+                        .commit();
+            }
 
         } else {
             mTwoPane = false;
