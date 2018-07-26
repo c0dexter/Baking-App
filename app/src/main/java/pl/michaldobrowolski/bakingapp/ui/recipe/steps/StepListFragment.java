@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -21,8 +20,6 @@ import pl.michaldobrowolski.bakingapp.R;
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Step;
 import pl.michaldobrowolski.bakingapp.ui.adapters.RecipeStepListAdapter;
 import pl.michaldobrowolski.bakingapp.ui.recipe.steps.details.StepDetailsActivity;
-import pl.michaldobrowolski.bakingapp.ui.recipe.steps.details.StepDetailsDescFragment;
-import pl.michaldobrowolski.bakingapp.ui.recipe.steps.details.StepDetailsExoPlayerFragment;
 
 public class StepListFragment extends Fragment implements RecipeStepListAdapter.StepListAdapterOnClickHandler {
     // ------------------ Properties ------------------ //

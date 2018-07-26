@@ -8,9 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -20,8 +17,6 @@ import pl.michaldobrowolski.bakingapp.R;
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Ingredient;
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Recipe;
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Step;
-import pl.michaldobrowolski.bakingapp.ui.recipe.steps.details.StepDetailsDescFragment;
-import pl.michaldobrowolski.bakingapp.ui.recipe.steps.details.StepDetailsExoPlayerFragment;
 import pl.michaldobrowolski.bakingapp.ui.recipe.steps.details.StepDetailsFragment;
 import pl.michaldobrowolski.bakingapp.ui.recipe.steps.ingredeints.IngredientsActivity;
 
@@ -42,7 +37,6 @@ public class StepsActivity extends AppCompatActivity {
     private StepDetailsFragment stepDetailsFragment;
     private boolean mStepDetailsFragmentsExists;
     boolean mTwoPane;
-
     // ------------------ End Of Properties ------------------ //
 
     @Override
@@ -72,12 +66,10 @@ public class StepsActivity extends AppCompatActivity {
         addStepListFragment(mFragmentAdded);
 
         if(findViewById(R.id.steps_activity_tablet_layout) != null) {
-            mTwoPane = true;
-
-
 
         } else {
             mTwoPane = false;
+
         }
 
         // Attach the Bundle to an intent

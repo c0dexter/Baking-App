@@ -47,7 +47,6 @@ public class StepDetailsActivity extends AppCompatActivity { //implements OnBack
     public TextView mStepCounterTv;
     public ImageButton backBtn;
     public ImageButton nextBtn;
-
     // ------------------ End Of Properties ------------------ //
 
     @Override
