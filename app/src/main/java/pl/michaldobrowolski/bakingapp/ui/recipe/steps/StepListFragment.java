@@ -31,7 +31,14 @@ public class StepListFragment extends Fragment implements RecipeStepListAdapter.
     private Context mContext;
     private ArrayList<Step> mStepList = new ArrayList<>();
     private String mRecipeName;
+    // Listener
+    OnStepClickListener mCallback;
     // ------------------ End Of Properties ------------------ //
+
+    // OnStepClickListener interface, calls a method in the host activity named onStepSelected
+    public interface OnStepClickListener {
+        void onStepSelected(int stepPosition);
+    }
 
     // Fragment must have: an empty constructor
     public StepListFragment() {
@@ -42,6 +49,14 @@ public class StepListFragment extends Fragment implements RecipeStepListAdapter.
     public void onAttach(Context context) {
         super.onAttach(context);
         mContext = context;
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            mCallback = (OnStepClickListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnHeadlineSelectedListener");
+        }
     }
 
     // Fragment must have: onCreateView

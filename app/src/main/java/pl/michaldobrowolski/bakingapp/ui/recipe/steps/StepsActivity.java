@@ -17,11 +17,10 @@ import pl.michaldobrowolski.bakingapp.R;
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Ingredient;
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Recipe;
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Step;
-import pl.michaldobrowolski.bakingapp.ui.recipe.steps.details.StepDetailsActivity;
 import pl.michaldobrowolski.bakingapp.ui.recipe.steps.details.StepDetailsFragment;
 import pl.michaldobrowolski.bakingapp.ui.recipe.steps.ingredeints.IngredientsActivity;
 
-public class StepsActivity extends AppCompatActivity {
+public class StepsActivity extends AppCompatActivity implements StepListFragment.OnStepClickListener {
     // -------------------- Properties --------------------//
     final static String TAG = StepsActivity.class.getSimpleName();
     // Bundle Keys
@@ -34,10 +33,12 @@ public class StepsActivity extends AppCompatActivity {
     private ArrayList<Step> mStepList = new ArrayList<>();
     private ArrayList<Ingredient> mIngredientList = new ArrayList<>();
     private boolean mFragmentAdded;
-
+    private FragmentManager mFragmentManager;
     private StepDetailsFragment stepDetailsFragment;
     private StepListFragment stepListFragment;
     private boolean mStepDetailsFragmentsExists;
+    Bundle stepDetailDefaultBundle;
+    Bundle stepDetailBundle;
     boolean mTwoPane;
 
     // ------------------ End Of Properties ------------------ //
@@ -48,7 +49,7 @@ public class StepsActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_steps);
 
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             mFragmentAdded = savedInstanceState.getBoolean("fragment_added");
         }
 
@@ -68,10 +69,10 @@ public class StepsActivity extends AppCompatActivity {
 
         addStepListFragment(mFragmentAdded);
 
-        if(findViewById(R.id.steps_activity_tablet_layout) != null) {
+        if (findViewById(R.id.steps_activity_tablet_layout) != null) {
             mTwoPane = true;
 
-            if(savedInstanceState == null){
+            if (savedInstanceState == null) {
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 stepDetailsFragment = new StepDetailsFragment();
                 stepDetailsFragment.setArguments(sendDefaultData());
@@ -80,6 +81,13 @@ public class StepsActivity extends AppCompatActivity {
                         .add(R.id.step_details_container, stepDetailsFragment)
                         .commit();
 
+            }
+
+            else {
+                stepDetailsFragment.setArguments(sendDefaultData()); // Here bundle with Id
+                mFragmentManager.beginTransaction()
+                        .add(R.id.step_details_container, stepDetailsFragment)
+                        .commit();
             }
 
         } else {
@@ -102,16 +110,29 @@ public class StepsActivity extends AppCompatActivity {
         });
     }
 
-    public Bundle sendDefaultData(){ // TODO: first step is working, I need to handle clicking on steps
-        Bundle stepDetailBundle = new Bundle();
-        stepDetailBundle.putString("recipe_name_bundle_key", mRecipe.getmName());
-        stepDetailBundle.putString("desc_bundle", mRecipe.getmSteps().get(0).getmDescription());
-        stepDetailBundle.putString("video_url_bundle", mRecipe.getmSteps().get(0).getmVideoURL());
-        stepDetailBundle.putString("thumbnail_url_bundle", mRecipe.getmSteps().get(0).getThumbnailURL());
-        stepDetailBundle.putInt("step_id_bundle_key", mRecipe.getmSteps().get(0).getId());
-        stepDetailBundle.putInt("total_steps_bundle_key", mRecipe.getmSteps().size());
+    public Bundle sendDefaultData() {
+        stepDetailDefaultBundle = new Bundle();
+        stepDetailDefaultBundle.putString("recipe_name_bundle_key", mRecipe.getmName());
+        stepDetailDefaultBundle.putString("desc_bundle", mRecipe.getmSteps().get(0).getmDescription());
+        stepDetailDefaultBundle.putString("video_url_bundle", mRecipe.getmSteps().get(0).getmVideoURL());
+        stepDetailDefaultBundle.putString("thumbnail_url_bundle", mRecipe.getmSteps().get(0).getThumbnailURL());
+        stepDetailDefaultBundle.putInt("step_id_bundle_key", mRecipe.getmSteps().get(0).getId());
+        stepDetailDefaultBundle.putInt("total_steps_bundle_key", mRecipe.getmSteps().size());
 
-        return stepDetailBundle;
+        return stepDetailDefaultBundle;
+    }
+
+    public Bundle sendDataOfSpecificStep(int position) { // TODO: get the stepId from clicked fragment
+
+        stepDetailDefaultBundle = new Bundle();
+        stepDetailDefaultBundle.putString("recipe_name_bundle_key", mRecipe.getmName());
+        stepDetailDefaultBundle.putString("desc_bundle", mRecipe.getmSteps().get(position).getmDescription());
+        stepDetailDefaultBundle.putString("video_url_bundle", mRecipe.getmSteps().get(position).getmVideoURL());
+        stepDetailDefaultBundle.putString("thumbnail_url_bundle", mRecipe.getmSteps().get(position).getThumbnailURL());
+        stepDetailDefaultBundle.putInt("step_id_bundle_key", mRecipe.getmSteps().get(position).getId());
+        stepDetailDefaultBundle.putInt("total_steps_bundle_key", mRecipe.getmSteps().size());
+
+        return stepDetailDefaultBundle;
     }
 
     @Override
@@ -181,4 +202,10 @@ public class StepsActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         outState.putBoolean("fragment_added", mFragmentAdded);
     }
+
+    @Override
+    public void onStepSelected(int stepPosition) {
+        // TODO: enter a logic here
+    }
+
 }
