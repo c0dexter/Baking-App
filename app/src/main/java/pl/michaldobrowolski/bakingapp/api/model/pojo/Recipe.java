@@ -57,7 +57,6 @@ public class Recipe implements Parcelable {
         this.mImage = ((String) in.readValue((String.class.getClassLoader())));
     }
 
-
     // Empty constructor
     public Recipe(int id, String name, ArrayList<Ingredient> ingredients, ArrayList<Step> steps, int servings, String imagePath) {
         mId = id;

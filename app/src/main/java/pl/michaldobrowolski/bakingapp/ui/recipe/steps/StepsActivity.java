@@ -17,6 +17,7 @@ import pl.michaldobrowolski.bakingapp.R;
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Ingredient;
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Recipe;
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Step;
+import pl.michaldobrowolski.bakingapp.ui.recipe.steps.details.StepDetailsActivity;
 import pl.michaldobrowolski.bakingapp.ui.recipe.steps.details.StepDetailsFragment;
 import pl.michaldobrowolski.bakingapp.ui.recipe.steps.ingredeints.IngredientsActivity;
 
@@ -71,28 +72,21 @@ public class StepsActivity extends AppCompatActivity implements StepListFragment
 
         if (findViewById(R.id.steps_activity_tablet_layout) != null) {
             mTwoPane = true;
-
             if (savedInstanceState == null) {
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 stepDetailsFragment = new StepDetailsFragment();
                 stepDetailsFragment.setArguments(sendDefaultData());
-
                 fragmentManager.beginTransaction()
                         .add(R.id.step_details_container, stepDetailsFragment)
                         .commit();
-
-            }
-
-            else {
+            } else {
                 stepDetailsFragment.setArguments(sendDefaultData()); // Here bundle with Id
                 mFragmentManager.beginTransaction()
                         .add(R.id.step_details_container, stepDetailsFragment)
                         .commit();
             }
-
         } else {
             mTwoPane = false;
-
         }
 
         // Attach the Bundle to an intent
@@ -118,22 +112,9 @@ public class StepsActivity extends AppCompatActivity implements StepListFragment
         stepDetailDefaultBundle.putString("thumbnail_url_bundle", mRecipe.getmSteps().get(0).getThumbnailURL());
         stepDetailDefaultBundle.putInt("step_id_bundle_key", mRecipe.getmSteps().get(0).getId());
         stepDetailDefaultBundle.putInt("total_steps_bundle_key", mRecipe.getmSteps().size());
-
         return stepDetailDefaultBundle;
     }
 
-    public Bundle sendDataOfSpecificStep(int position) { // TODO: get the stepId from clicked fragment
-
-        stepDetailDefaultBundle = new Bundle();
-        stepDetailDefaultBundle.putString("recipe_name_bundle_key", mRecipe.getmName());
-        stepDetailDefaultBundle.putString("desc_bundle", mRecipe.getmSteps().get(position).getmDescription());
-        stepDetailDefaultBundle.putString("video_url_bundle", mRecipe.getmSteps().get(position).getmVideoURL());
-        stepDetailDefaultBundle.putString("thumbnail_url_bundle", mRecipe.getmSteps().get(position).getThumbnailURL());
-        stepDetailDefaultBundle.putInt("step_id_bundle_key", mRecipe.getmSteps().get(position).getId());
-        stepDetailDefaultBundle.putInt("total_steps_bundle_key", mRecipe.getmSteps().size());
-
-        return stepDetailDefaultBundle;
-    }
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -204,8 +185,17 @@ public class StepsActivity extends AppCompatActivity implements StepListFragment
     }
 
     @Override
-    public void onStepSelected(int stepPosition) {
-        // TODO: enter a logic here
+    public void onStepSelected(String recipeName, int stepPosition) {
+        if(stepDetailsFragment!=null) {
+            stepDetailsFragment.loadData(mStepList.get(stepPosition));
+        } else {
+            Bundle stepDetailBundle = new Bundle();
+            stepDetailBundle.putString("recipe_name_bundle_key", recipeName);
+            stepDetailBundle.putParcelableArrayList("step_array_bundle_key", mStepList);
+            stepDetailBundle.putInt("step_position_bundle_key", stepPosition);
+            final Intent intent = new Intent(this, StepDetailsActivity.class);
+            intent.putExtra("step_detail", stepDetailBundle);
+            startActivity(intent);
+        }
     }
-
 }

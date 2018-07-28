@@ -37,7 +37,7 @@ public class StepListFragment extends Fragment implements RecipeStepListAdapter.
 
     // OnStepClickListener interface, calls a method in the host activity named onStepSelected
     public interface OnStepClickListener {
-        void onStepSelected(int stepPosition);
+        void onStepSelected(String recipeName, int stepPosition);
     }
 
     // Fragment must have: an empty constructor
@@ -88,14 +88,7 @@ public class StepListFragment extends Fragment implements RecipeStepListAdapter.
 
     @Override
     public void onClickStep(int stepPosition) {
-        Bundle stepDetailBundle = new Bundle();
-        stepDetailBundle.putString("recipe_name_bundle_key", mRecipeName);
-        stepDetailBundle.putParcelableArrayList("step_array_bundle_key", mStepList);
-        stepDetailBundle.putInt("step_position_bundle_key", stepPosition);
-
-        final Intent intent = new Intent(getContext(), StepDetailsActivity.class);
-        intent.putExtra("step_detail", stepDetailBundle);
-        startActivity(intent);
+        mCallback.onStepSelected(mRecipeName, stepPosition);
     }
 
     private void getRecipeDataFromBundle(String bundleStepListKey, String bundleRecipeNameKey) {

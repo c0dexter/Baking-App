@@ -24,7 +24,6 @@ public class IngredientsActivity extends AppCompatActivity {
         if(savedInstanceState != null){
             fragmentAdded = savedInstanceState.getBoolean("fragment_added");
         }
-
         addIngredientListFragment(fragmentAdded);
     }
 

@@ -32,6 +32,7 @@ import com.google.android.exoplayer2.util.Util;
 import java.util.Objects;
 
 import pl.michaldobrowolski.bakingapp.R;
+import pl.michaldobrowolski.bakingapp.api.model.pojo.Step;
 
 public class StepDetailsFragment extends Fragment {
     final static String TAG = StepDetailsFragment.class.getSimpleName();
@@ -124,7 +125,7 @@ public class StepDetailsFragment extends Fragment {
             fullDescTv = rootView.findViewById(R.id.text_step_full_desc);
             fullDescTv.setText(mDescription);
 
-            // Set a title on NavBar
+            // Set a title on NavBar TODO: check this and set a proper behaviour
 //            ((StepDetailsActivity) Objects.requireNonNull(getActivity()))
 //                    .setActionBarTitle(mRecipeName + "'s instructions");
         }
@@ -168,18 +169,33 @@ public class StepDetailsFragment extends Fragment {
             mExoPlayer.setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);        // Handling full screen mode
             mPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FILL);                     // Handling full screen mode
             mPlayerView.setPlayer(mExoPlayer);
-
-            // Prepare MediaSource
-            String userAgent = Util.getUserAgent(mContext, "BakingApp");
-            MediaSource mediaSource = new ExtractorMediaSource(
-                    mediaUri,
-                    new DefaultDataSourceFactory(mContext, userAgent),
-                    new DefaultExtractorsFactory(),
-                    null,
-                    null);
-            mExoPlayer.prepare(mediaSource);
-            mExoPlayer.setPlayWhenReady(true);
+            loadVideo(mediaUri);
         }
+    }
+
+    private void loadVideo(Uri mediaUri) {
+        MediaSource mediaSource = getMediaSourceForPlayer(mediaUri);
+        mExoPlayer.prepare(mediaSource);
+        mExoPlayer.setPlayWhenReady(true);
+    }
+
+    private MediaSource getMediaSourceForPlayer(Uri mediaUri) {
+        // Prepare MediaSource
+        String userAgent = Util.getUserAgent(mContext, "BakingApp");
+        return new ExtractorMediaSource(
+                mediaUri,
+                new DefaultDataSourceFactory(mContext, userAgent),
+                new DefaultExtractorsFactory(),
+                null,
+                null);
+    }
+    public void loadData(Step step) {
+        mVideoUrl = step.getmVideoURL();
+        mDescription = step.getmDescription();
+
+        fullDescTv.setText(step.getmDescription());
+        showOrHideExoPlayer(mPlayerView, mDefaultStepImage);
+        loadVideo(Uri.parse(mVideoUrl));
     }
 
     @Override
@@ -200,6 +216,4 @@ public class StepDetailsFragment extends Fragment {
             mExoPlayer.setPlayWhenReady(true);
         }
     }
-
-
 }
