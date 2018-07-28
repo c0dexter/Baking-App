@@ -33,6 +33,7 @@ import java.util.Objects;
 
 import pl.michaldobrowolski.bakingapp.R;
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Step;
+import pl.michaldobrowolski.bakingapp.utils.UtilityHelper;
 
 public class StepDetailsFragment extends Fragment {
     final static String TAG = StepDetailsFragment.class.getSimpleName();
@@ -48,8 +49,6 @@ public class StepDetailsFragment extends Fragment {
     TextView fullDescTv;
     // Fields
     private Context mContext;
-    private int mStepId;
-    private int mTotalStepsAmount;
     private int mCurrentStep;
     private String mDescription;
     private String mRecipeName;
@@ -60,6 +59,7 @@ public class StepDetailsFragment extends Fragment {
     private SimpleExoPlayerView mPlayerView;
     private ImageView mDefaultStepImage;
     private long mMediaLength;
+    private UtilityHelper utilityHelper;
 
     private Bundle stepDetailBundle;
     // ------------------ End Of Properties ------------------ //
@@ -80,13 +80,14 @@ public class StepDetailsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+        // Initialize utility helper, function removeRedundantCharactersFromText() will be used
+        utilityHelper = new UtilityHelper();
 
         // Get data from StepDetailActivity
         getDataFromBundle();
 
         // Verify and populate a correct Video URL by using thumb url (for consistence)
         switchThumbUrlToVideoUrl(mThumbnailUrl);
-
 
         // Set a root view
         View rootView = checkScreenOrientationAndSetRootView(inflater, container);
@@ -104,7 +105,7 @@ public class StepDetailsFragment extends Fragment {
 
     private View checkScreenOrientationAndSetRootView(LayoutInflater inflater, ViewGroup container) {
         View rootView;
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && container.findViewById(R.id.steps_activity_step_detail_tablet_layout) != null) {
 
             // Play a video clip on the full screen, hide redundant elements in a full screen mode
             Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).hide();
@@ -126,20 +127,18 @@ public class StepDetailsFragment extends Fragment {
             fullDescTv.setText(mDescription);
 
             // Set a title on NavBar TODO: check this and set a proper behaviour
-//            ((StepDetailsActivity) Objects.requireNonNull(getActivity()))
-//                    .setActionBarTitle(mRecipeName + "'s instructions");
+            ((StepDetailsActivity) Objects.requireNonNull(getActivity()))
+                    .setActionBarTitle(mRecipeName + "'s instructions");
         }
         return rootView;
     }
 
     private void getDataFromBundle() {
         stepDetailBundle = getArguments();
-        mRecipeName = stepDetailBundle.getString(BUNDLE_RECIPE_NAME_KEY);
-        mDescription = stepDetailBundle.getString(BUNDLE_DESCRIPTION_KEY);
-        mVideoUrl = stepDetailBundle.getString(BUNDLE_VIDEO_URL_KEY);
-        mThumbnailUrl = stepDetailBundle.getString(BUNDLE_VIDEO_THUMB_URL_KEY);
-        mStepId = Objects.requireNonNull(stepDetailBundle).getInt(BUNDLE_STEP_ID_KEY);
-        mTotalStepsAmount = stepDetailBundle.getInt(BUNDLE_RECIPE_TOTAL_STEPS_AMOUNT_KEY);
+        mRecipeName = stepDetailBundle != null ? stepDetailBundle.getString(BUNDLE_RECIPE_NAME_KEY) : null;
+        mDescription = stepDetailBundle != null ? stepDetailBundle.getString(BUNDLE_DESCRIPTION_KEY) : null;
+        mVideoUrl = stepDetailBundle != null ? stepDetailBundle.getString(BUNDLE_VIDEO_URL_KEY) : null;
+        mThumbnailUrl = stepDetailBundle != null ? stepDetailBundle.getString(BUNDLE_VIDEO_THUMB_URL_KEY) : null;
     }
 
     private void switchThumbUrlToVideoUrl(String thumbUrl) {
@@ -191,9 +190,8 @@ public class StepDetailsFragment extends Fragment {
     }
     public void loadData(Step step) {
         mVideoUrl = step.getmVideoURL();
-        mDescription = step.getmDescription();
-
-        fullDescTv.setText(step.getmDescription());
+        mDescription = utilityHelper.removeRedundantCharactersFromText("^(\\d*.\\s)", step.getmDescription());
+        fullDescTv.setText(mDescription);
         showOrHideExoPlayer(mPlayerView, mDefaultStepImage);
         loadVideo(Uri.parse(mVideoUrl));
     }

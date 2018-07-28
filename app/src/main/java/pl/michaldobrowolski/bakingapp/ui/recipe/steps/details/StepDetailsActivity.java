@@ -43,7 +43,7 @@ public class StepDetailsActivity extends AppCompatActivity { //implements OnBack
     private StepDetailsFragment stepDetailsFragment;
     private UtilityHelper utilityHelper = new UtilityHelper();
     private boolean fragmentAdded;
-
+    // UI elements
     public TextView mStepCounterTv;
     public ImageButton backBtn;
     public ImageButton nextBtn;
@@ -59,7 +59,6 @@ public class StepDetailsActivity extends AppCompatActivity { //implements OnBack
         mStepCounterTv = findViewById(R.id.text_step_counter);
         backBtn = findViewById(R.id.button_previous_step);
         nextBtn = findViewById(R.id.button_next_step);
-;
 
         // Get data from bundle
         getStepDetailsDataFromBundle(

@@ -27,6 +27,8 @@ public class StepsActivity extends AppCompatActivity implements StepListFragment
     // Bundle Keys
     private static final String BUNDLE_KEY = "recipe";
     private static final String BUNDLE_PARCELABLE_KEY = "recipeSteps";
+    Bundle stepDetailDefaultBundle;
+    boolean mTwoPane;
     // Properties
     private Bundle bundle;
     private Bundle stepsBundle;
@@ -34,14 +36,8 @@ public class StepsActivity extends AppCompatActivity implements StepListFragment
     private ArrayList<Step> mStepList = new ArrayList<>();
     private ArrayList<Ingredient> mIngredientList = new ArrayList<>();
     private boolean mFragmentAdded;
-    private FragmentManager mFragmentManager;
     private StepDetailsFragment stepDetailsFragment;
-    private StepListFragment stepListFragment;
-    private boolean mStepDetailsFragmentsExists;
-    Bundle stepDetailDefaultBundle;
-    Bundle stepDetailBundle;
-    boolean mTwoPane;
-
+    private FragmentManager mFragmentManager;
     // ------------------ End Of Properties ------------------ //
 
     @Override
@@ -72,11 +68,11 @@ public class StepsActivity extends AppCompatActivity implements StepListFragment
 
         if (findViewById(R.id.steps_activity_tablet_layout) != null) {
             mTwoPane = true;
+            mFragmentManager = getSupportFragmentManager();
             if (savedInstanceState == null) {
-                FragmentManager fragmentManager = getSupportFragmentManager();
                 stepDetailsFragment = new StepDetailsFragment();
                 stepDetailsFragment.setArguments(sendDefaultData());
-                fragmentManager.beginTransaction()
+                mFragmentManager.beginTransaction()
                         .add(R.id.step_details_container, stepDetailsFragment)
                         .commit();
             } else {
@@ -114,7 +110,6 @@ public class StepsActivity extends AppCompatActivity implements StepListFragment
         stepDetailDefaultBundle.putInt("total_steps_bundle_key", mRecipe.getmSteps().size());
         return stepDetailDefaultBundle;
     }
-
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -186,7 +181,7 @@ public class StepsActivity extends AppCompatActivity implements StepListFragment
 
     @Override
     public void onStepSelected(String recipeName, int stepPosition) {
-        if(stepDetailsFragment!=null) {
+        if (stepDetailsFragment != null) {
             stepDetailsFragment.loadData(mStepList.get(stepPosition));
         } else {
             Bundle stepDetailBundle = new Bundle();
