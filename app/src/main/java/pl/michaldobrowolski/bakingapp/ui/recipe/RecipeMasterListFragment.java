@@ -2,6 +2,7 @@ package pl.michaldobrowolski.bakingapp.ui.recipe;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -34,6 +35,7 @@ public class RecipeMasterListFragment extends android.support.v4.app.Fragment im
     private List<Recipe> mRecipeList;
     private RecyclerView mRecyclerView;
     private RecipeMasterListAdapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     public RecipeMasterListFragment() {
     }
@@ -57,7 +59,11 @@ public class RecipeMasterListFragment extends android.support.v4.app.Fragment im
         mRecyclerView.setHasFixedSize(true);
 
         //mLayoutManager = new LinearLayoutManager(mContext);
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mContext, 1);
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            mLayoutManager = new GridLayoutManager(mContext, 2);
+        } else {
+            mLayoutManager = new GridLayoutManager(mContext, 1);
+        }
         mRecyclerView.setLayoutManager(mLayoutManager);
         fetchRecipes();
         return rootView;

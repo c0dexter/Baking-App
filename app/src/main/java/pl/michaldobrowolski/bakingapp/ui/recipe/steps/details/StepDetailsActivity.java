@@ -1,6 +1,6 @@
 package pl.michaldobrowolski.bakingapp.ui.recipe.steps.details;
 
-import android.net.Uri;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
@@ -8,11 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -31,6 +29,11 @@ public class StepDetailsActivity extends AppCompatActivity { //implements OnBack
     private static final String BUNDLE_ARRAY_STEPS_KEY = "step_array_bundle_key";
     private static final String BUNDLE_STEP_ID_KEY = "step_position_bundle_key";
     private static final String BUNDLE_RECIPE_NAME_KEY = "recipe_name_bundle_key";
+    // UI elements
+    public TextView mStepCounterTv;
+    public ImageButton backBtn;
+    public ImageButton nextBtn;
+    public LinearLayout navSection;
     // Fields
     private int mCurrentStep;
     private String mRecipeName;
@@ -43,10 +46,6 @@ public class StepDetailsActivity extends AppCompatActivity { //implements OnBack
     private StepDetailsFragment stepDetailsFragment;
     private UtilityHelper utilityHelper = new UtilityHelper();
     private boolean fragmentAdded;
-    // UI elements
-    public TextView mStepCounterTv;
-    public ImageButton backBtn;
-    public ImageButton nextBtn;
     // ------------------ End Of Properties ------------------ //
 
     @Override
@@ -59,6 +58,10 @@ public class StepDetailsActivity extends AppCompatActivity { //implements OnBack
         mStepCounterTv = findViewById(R.id.text_step_counter);
         backBtn = findViewById(R.id.button_previous_step);
         nextBtn = findViewById(R.id.button_next_step);
+        navSection = findViewById(R.id.navigation_section_linear_layout);
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            navSection.setVisibility(View.GONE); // TODO: This has solved problem with showing navigate section in a landscape mode, TEST IT
+        }
 
         // Get data from bundle
         getStepDetailsDataFromBundle(
@@ -66,6 +69,11 @@ public class StepDetailsActivity extends AppCompatActivity { //implements OnBack
                 BUNDLE_ARRAY_STEPS_KEY,
                 BUNDLE_STEP_ID_KEY,
                 BUNDLE_RECIPE_NAME_KEY);
+
+        // Set title on the ActionBar
+        setTitle(mRecipeName + "'s instructions");
+
+
 
         // Check if saved instance state exist and set a fragmentAdded flag
         if (savedInstanceState != null) {
@@ -98,7 +106,7 @@ public class StepDetailsActivity extends AppCompatActivity { //implements OnBack
 
     public void getDataForSpecificStep(int position) {
         mTotalStepsAmount = mStepArrayList.size();
-        mDescription = mStepArrayList.get(position).getmDescription();
+        mDescription = utilityHelper.removeRedundantCharactersFromText("^(\\d*.\\s)", mStepArrayList.get(position).getmDescription());
         mVideoUrl = mStepArrayList.get(position).getmVideoURL();
         mThumbnailUrl = mStepArrayList.get(position).getThumbnailURL();
         mStepId = position; // Getting position instead of step ID to avoiding bug in numeration
@@ -108,10 +116,6 @@ public class StepDetailsActivity extends AppCompatActivity { //implements OnBack
     public boolean onSupportNavigateUp() {
         finish();
         return true;
-    }
-
-    public void setActionBarTitle(String title) {
-        Objects.requireNonNull(getSupportActionBar()).setTitle(title);
     }
 
     private void addStepDetailsFragment(boolean fragmentExist) {

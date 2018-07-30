@@ -27,6 +27,9 @@ public class StepsActivity extends AppCompatActivity implements StepListFragment
     // Bundle Keys
     private static final String BUNDLE_KEY = "recipe";
     private static final String BUNDLE_PARCELABLE_KEY = "recipeSteps";
+    private static final String SAVE_INSTANCE_STATE_FRAGMENT_ADDED = "fragment_added";
+    private static final String SAVE_INSTANCE_STATE_CLICKED_STEP = "step_number_clicked";
+
     Bundle stepDetailDefaultBundle;
     boolean mTwoPane;
     // Properties
@@ -38,6 +41,7 @@ public class StepsActivity extends AppCompatActivity implements StepListFragment
     private boolean mFragmentAdded;
     private StepDetailsFragment stepDetailsFragment;
     private FragmentManager mFragmentManager;
+    private int mSelectedStepNumber;
     // ------------------ End Of Properties ------------------ //
 
     @Override
@@ -47,7 +51,8 @@ public class StepsActivity extends AppCompatActivity implements StepListFragment
         setContentView(R.layout.activity_steps);
 
         if (savedInstanceState != null) {
-            mFragmentAdded = savedInstanceState.getBoolean("fragment_added");
+            mFragmentAdded = savedInstanceState.getBoolean(SAVE_INSTANCE_STATE_FRAGMENT_ADDED);
+            mSelectedStepNumber = savedInstanceState.getInt(SAVE_INSTANCE_STATE_CLICKED_STEP);
         }
 
         bundle = getIntent().getExtras();
@@ -68,17 +73,18 @@ public class StepsActivity extends AppCompatActivity implements StepListFragment
 
         if (findViewById(R.id.steps_activity_tablet_layout) != null) {
             mTwoPane = true;
+            stepDetailsFragment = new StepDetailsFragment();
             mFragmentManager = getSupportFragmentManager();
+
             if (savedInstanceState == null) {
-                stepDetailsFragment = new StepDetailsFragment();
-                stepDetailsFragment.setArguments(sendDefaultData());
+                stepDetailsFragment.setArguments(sendDefaultData(mSelectedStepNumber));
                 mFragmentManager.beginTransaction()
                         .add(R.id.step_details_container, stepDetailsFragment)
                         .commit();
             } else {
-                stepDetailsFragment.setArguments(sendDefaultData()); // Here bundle with Id
+                stepDetailsFragment.setArguments(sendDefaultData(mSelectedStepNumber));
                 mFragmentManager.beginTransaction()
-                        .add(R.id.step_details_container, stepDetailsFragment)
+                        .replace(R.id.step_details_container, stepDetailsFragment)
                         .commit();
             }
         } else {
@@ -100,14 +106,16 @@ public class StepsActivity extends AppCompatActivity implements StepListFragment
         });
     }
 
-    public Bundle sendDefaultData() {
+    public Bundle sendDefaultData(int stepNumber) {
         stepDetailDefaultBundle = new Bundle();
         stepDetailDefaultBundle.putString("recipe_name_bundle_key", mRecipe.getmName());
-        stepDetailDefaultBundle.putString("desc_bundle", mRecipe.getmSteps().get(0).getmDescription());
-        stepDetailDefaultBundle.putString("video_url_bundle", mRecipe.getmSteps().get(0).getmVideoURL());
-        stepDetailDefaultBundle.putString("thumbnail_url_bundle", mRecipe.getmSteps().get(0).getThumbnailURL());
-        stepDetailDefaultBundle.putInt("step_id_bundle_key", mRecipe.getmSteps().get(0).getId());
+        stepDetailDefaultBundle.putString("desc_bundle", mRecipe.getmSteps().get(stepNumber).getmDescription());
+        stepDetailDefaultBundle.putString("video_url_bundle", mRecipe.getmSteps().get(stepNumber).getmVideoURL());
+        stepDetailDefaultBundle.putString("thumbnail_url_bundle", mRecipe.getmSteps().get(stepNumber).getThumbnailURL());
+        stepDetailDefaultBundle.putInt("step_id_bundle_key", mRecipe.getmSteps().get(stepNumber).getId());
         stepDetailDefaultBundle.putInt("total_steps_bundle_key", mRecipe.getmSteps().size());
+        stepDetailDefaultBundle.putBoolean("two_pane_key", mTwoPane);
+
         return stepDetailDefaultBundle;
     }
 
@@ -120,7 +128,6 @@ public class StepsActivity extends AppCompatActivity implements StepListFragment
     private void addStepListFragment(boolean fragmentExist) {
         StepListFragment stepListFragment = new StepListFragment();
         stepListFragment.setArguments(stepsBundle);
-
         FragmentManager fm = getSupportFragmentManager();
 
         if (!fragmentExist) {
@@ -177,10 +184,12 @@ public class StepsActivity extends AppCompatActivity implements StepListFragment
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean("fragment_added", mFragmentAdded);
+        outState.putInt("step_number_clicked", mSelectedStepNumber);
     }
 
     @Override
     public void onStepSelected(String recipeName, int stepPosition) {
+        mSelectedStepNumber = stepPosition;
         if (stepDetailsFragment != null) {
             stepDetailsFragment.loadData(mStepList.get(stepPosition));
         } else {

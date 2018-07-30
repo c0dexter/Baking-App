@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -33,6 +34,7 @@ import java.util.Objects;
 
 import pl.michaldobrowolski.bakingapp.R;
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Step;
+import pl.michaldobrowolski.bakingapp.ui.recipe.steps.StepsActivity;
 import pl.michaldobrowolski.bakingapp.utils.UtilityHelper;
 
 public class StepDetailsFragment extends Fragment {
@@ -41,27 +43,26 @@ public class StepDetailsFragment extends Fragment {
     // -------------------- Properties --------------------//
     // Bundle keys
     private static final String BUNDLE_DESCRIPTION_KEY = "desc_bundle";
-    private static final String BUNDLE_STEP_ID_KEY = "step_id_bundle_key";
-    private static final String BUNDLE_RECIPE_TOTAL_STEPS_AMOUNT_KEY = "total_steps_bundle_key";
-    private static final String BUNDLE_RECIPE_NAME_KEY = "recipe_name_bundle_key";
     private static final String BUNDLE_VIDEO_URL_KEY = "video_url_bundle";
     private static final String BUNDLE_VIDEO_THUMB_URL_KEY = "thumbnail_url_bundle";
+    private static final String BUNDLE_TWO_PANE_FLAG_KEY = "two_pane_key";
+    private static final String SAVED_INSTANCE_SELECTED_POSITION = "exo_position";
+
     TextView fullDescTv;
     // Fields
     private Context mContext;
-    private int mCurrentStep;
     private String mDescription;
-    private String mRecipeName;
     private String mVideoUrl;
     private String mThumbnailUrl;
-    private TextView mStepCounterTv;
     private SimpleExoPlayer mExoPlayer;
     private SimpleExoPlayerView mPlayerView;
     private ImageView mDefaultStepImage;
     private long mMediaLength;
     private UtilityHelper utilityHelper;
-
     private Bundle stepDetailBundle;
+    private boolean mTwoPane;
+
+    StepDetailsActivity stepDetailsActivity;
     // ------------------ End Of Properties ------------------ //
 
     // Fragment must have: an empty constructor
@@ -80,8 +81,13 @@ public class StepDetailsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+        if (savedInstanceState != null) {
+            mMediaLength = savedInstanceState.getLong(SAVED_INSTANCE_SELECTED_POSITION, mMediaLength);
+        }
+
         // Initialize utility helper, function removeRedundantCharactersFromText() will be used
         utilityHelper = new UtilityHelper();
+        stepDetailsActivity = new StepDetailsActivity();
 
         // Get data from StepDetailActivity
         getDataFromBundle();
@@ -96,7 +102,6 @@ public class StepDetailsFragment extends Fragment {
         mPlayerView = rootView.findViewById(R.id.playerView);
         mDefaultStepImage = rootView.findViewById(R.id.defaultStepImage);
 
-
         // ExoPlayer
         showOrHideExoPlayer(mPlayerView, mDefaultStepImage);
 
@@ -105,7 +110,7 @@ public class StepDetailsFragment extends Fragment {
 
     private View checkScreenOrientationAndSetRootView(LayoutInflater inflater, ViewGroup container) {
         View rootView;
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && container.findViewById(R.id.steps_activity_step_detail_tablet_layout) != null) {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && !mTwoPane) {
 
             // Play a video clip on the full screen, hide redundant elements in a full screen mode
             Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).hide();
@@ -117,7 +122,7 @@ public class StepDetailsFragment extends Fragment {
                             View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
                             View.SYSTEM_UI_FLAG_FULLSCREEN;
             rootView.setSystemUiVisibility(uiOptions);
-            rootView = inflater.inflate(R.layout.fragment_step_detail_video_and_desc_horizontal, container, false); // COMPLETED: Here put the new layout with merged Exo and Desc
+            rootView = inflater.inflate(R.layout.fragment_step_detail_video_and_desc_horizontal, container, false);
 
         } else {
             Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).show();
@@ -125,20 +130,16 @@ public class StepDetailsFragment extends Fragment {
 
             fullDescTv = rootView.findViewById(R.id.text_step_full_desc);
             fullDescTv.setText(mDescription);
-
-            // Set a title on NavBar TODO: check this and set a proper behaviour
-            ((StepDetailsActivity) Objects.requireNonNull(getActivity()))
-                    .setActionBarTitle(mRecipeName + "'s instructions");
         }
         return rootView;
     }
 
     private void getDataFromBundle() {
         stepDetailBundle = getArguments();
-        mRecipeName = stepDetailBundle != null ? stepDetailBundle.getString(BUNDLE_RECIPE_NAME_KEY) : null;
-        mDescription = stepDetailBundle != null ? stepDetailBundle.getString(BUNDLE_DESCRIPTION_KEY) : null;
+        mDescription = utilityHelper.removeRedundantCharactersFromText("^(\\d*.\\s)", stepDetailBundle != null ? stepDetailBundle.getString(BUNDLE_DESCRIPTION_KEY) : null);
         mVideoUrl = stepDetailBundle != null ? stepDetailBundle.getString(BUNDLE_VIDEO_URL_KEY) : null;
         mThumbnailUrl = stepDetailBundle != null ? stepDetailBundle.getString(BUNDLE_VIDEO_THUMB_URL_KEY) : null;
+        mTwoPane = stepDetailBundle != null && stepDetailBundle.getBoolean(BUNDLE_TWO_PANE_FLAG_KEY);
     }
 
     private void switchThumbUrlToVideoUrl(String thumbUrl) {
@@ -162,6 +163,7 @@ public class StepDetailsFragment extends Fragment {
     void initializePlayer(Uri mediaUri) {
         if (mExoPlayer == null) {
             // Create an instance of the SimpleExoPlayer
+
             TrackSelector trackSelector = new DefaultTrackSelector();
             LoadControl loadControl = new DefaultLoadControl();
             mExoPlayer = ExoPlayerFactory.newSimpleInstance(mContext, trackSelector, loadControl);
@@ -174,6 +176,7 @@ public class StepDetailsFragment extends Fragment {
 
     private void loadVideo(Uri mediaUri) {
         MediaSource mediaSource = getMediaSourceForPlayer(mediaUri);
+        if (mMediaLength != C.TIME_UNSET) mExoPlayer.seekTo(mMediaLength);
         mExoPlayer.prepare(mediaSource);
         mExoPlayer.setPlayWhenReady(true);
     }
@@ -188,6 +191,7 @@ public class StepDetailsFragment extends Fragment {
                 null,
                 null);
     }
+
     public void loadData(Step step) {
         mVideoUrl = step.getmVideoURL();
         mDescription = utilityHelper.removeRedundantCharactersFromText("^(\\d*.\\s)", step.getmDescription());
@@ -203,15 +207,29 @@ public class StepDetailsFragment extends Fragment {
             mMediaLength = mExoPlayer.getCurrentPosition();
             mExoPlayer.stop();
             mExoPlayer.release();
+            mExoPlayer = null;
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (mExoPlayer != null) {
-            mExoPlayer.seekTo(mMediaLength);
-            mExoPlayer.setPlayWhenReady(true);
+        if (mExoPlayer == null) {
+            initializePlayer(Uri.parse(mVideoUrl));
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        if(mExoPlayer!=null) {
+            mExoPlayer.stop();
+        }
+        super.onDestroy();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong("exo_position", mMediaLength);
     }
 }
