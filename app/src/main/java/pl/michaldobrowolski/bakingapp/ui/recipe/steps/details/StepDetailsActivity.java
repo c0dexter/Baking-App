@@ -60,7 +60,7 @@ public class StepDetailsActivity extends AppCompatActivity { //implements OnBack
         nextBtn = findViewById(R.id.button_next_step);
         navSection = findViewById(R.id.navigation_section_linear_layout);
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            navSection.setVisibility(View.GONE); // TODO: This has solved problem with showing navigate section in a landscape mode, TEST IT
+            navSection.setVisibility(View.GONE);
         }
 
         // Get data from bundle
@@ -72,7 +72,6 @@ public class StepDetailsActivity extends AppCompatActivity { //implements OnBack
 
         // Set title on the ActionBar
         setTitle(mRecipeName + "'s instructions");
-
 
 
         // Check if saved instance state exist and set a fragmentAdded flag

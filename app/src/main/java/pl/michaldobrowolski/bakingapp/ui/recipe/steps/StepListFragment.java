@@ -1,7 +1,6 @@
 package pl.michaldobrowolski.bakingapp.ui.recipe.steps;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,7 +18,6 @@ import java.util.Objects;
 import pl.michaldobrowolski.bakingapp.R;
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Step;
 import pl.michaldobrowolski.bakingapp.ui.adapters.RecipeStepListAdapter;
-import pl.michaldobrowolski.bakingapp.ui.recipe.steps.details.StepDetailsActivity;
 
 public class StepListFragment extends Fragment implements RecipeStepListAdapter.StepListAdapterOnClickHandler {
     // ------------------ Properties ------------------ //
@@ -27,18 +25,13 @@ public class StepListFragment extends Fragment implements RecipeStepListAdapter.
     // Bundle keys
     private static final String STEP_LIST_BUNDLE_KEY = "steps_list";
     private static final String RECIPE_NAME_BUNDLE_KEY = "recipe_name";
+    // Listener
+    OnStepClickListener mCallback;
     // Properties
     private Context mContext;
     private ArrayList<Step> mStepList = new ArrayList<>();
     private String mRecipeName;
-    // Listener
-    OnStepClickListener mCallback;
     // ------------------ End Of Properties ------------------ //
-
-    // OnStepClickListener interface, calls a method in the host activity named onStepSelected
-    public interface OnStepClickListener {
-        void onStepSelected(String recipeName, int stepPosition);
-    }
 
     // Fragment must have: an empty constructor
     public StepListFragment() {
@@ -103,5 +96,10 @@ public class StepListFragment extends Fragment implements RecipeStepListAdapter.
         } else {
             Log.i(TAG, "Bundle is NULL");
         }
+    }
+
+    // OnStepClickListener interface, calls a method in the host activity named onStepSelected
+    public interface OnStepClickListener {
+        void onStepSelected(String recipeName, int stepPosition);
     }
 }

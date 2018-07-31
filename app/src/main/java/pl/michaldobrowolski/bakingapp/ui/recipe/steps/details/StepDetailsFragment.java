@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -34,7 +33,6 @@ import java.util.Objects;
 
 import pl.michaldobrowolski.bakingapp.R;
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Step;
-import pl.michaldobrowolski.bakingapp.ui.recipe.steps.StepsActivity;
 import pl.michaldobrowolski.bakingapp.utils.UtilityHelper;
 
 public class StepDetailsFragment extends Fragment {
@@ -49,6 +47,7 @@ public class StepDetailsFragment extends Fragment {
     private static final String SAVED_INSTANCE_SELECTED_POSITION = "exo_position";
 
     TextView fullDescTv;
+    StepDetailsActivity stepDetailsActivity;
     // Fields
     private Context mContext;
     private String mDescription;
@@ -61,8 +60,6 @@ public class StepDetailsFragment extends Fragment {
     private UtilityHelper utilityHelper;
     private Bundle stepDetailBundle;
     private boolean mTwoPane;
-
-    StepDetailsActivity stepDetailsActivity;
     // ------------------ End Of Properties ------------------ //
 
     // Fragment must have: an empty constructor
@@ -221,7 +218,7 @@ public class StepDetailsFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        if(mExoPlayer!=null) {
+        if (mExoPlayer != null) {
             mExoPlayer.stop();
         }
         super.onDestroy();
