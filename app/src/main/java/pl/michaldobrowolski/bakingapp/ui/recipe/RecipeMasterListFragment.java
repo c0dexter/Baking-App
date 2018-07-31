@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import java.util.List;
 
 import pl.michaldobrowolski.bakingapp.R;
@@ -36,6 +38,7 @@ public class RecipeMasterListFragment extends android.support.v4.app.Fragment im
     private RecyclerView mRecyclerView;
     private RecipeMasterListAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private String mJsonRetrofitResult;
 
     public RecipeMasterListFragment() {
     }
@@ -78,7 +81,8 @@ public class RecipeMasterListFragment extends android.support.v4.app.Fragment im
                     Log.d("LOG: Response Code: ", response.code() + "");
                     //fetchingData(response);
                     mRecipeList = response.body();
-                    mAdapter = new RecipeMasterListAdapter(mRecipeList, RecipeMasterListFragment.this);
+                    mJsonRetrofitResult = new Gson().toJson(mRecipeList);
+                    mAdapter = new RecipeMasterListAdapter(mRecipeList, mJsonRetrofitResult, RecipeMasterListFragment.this);
                     mRecyclerView.setAdapter(mAdapter);
                 } else {
                     Toast.makeText(mContext, "Error. Fetching data failed :(", Toast.LENGTH_SHORT).show();

@@ -3,6 +3,7 @@
     package="pl.michaldobrowolski.bakingapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,7 +11,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.recipe.MainActivity">
+        <activity android:name=".ui.recipe.MainActivity"
+            android:launchMode="singleTop"> <!-- TODO: check this -->
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,6 +23,16 @@
         <activity android:name=".ui.recipe.steps.StepsActivity" />
         <activity android:name=".ui.recipe.steps.ingredeints.IngredientsActivity" />
         <activity android:name=".ui.recipe.steps.details.StepDetailsActivity" />
+
+        <receiver android:name=".RecipeWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/recipe_widget_info" />
+        </receiver>
     </application>
 
 </manifest>

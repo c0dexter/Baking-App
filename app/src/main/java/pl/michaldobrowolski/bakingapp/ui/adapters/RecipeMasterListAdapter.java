@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import java.util.List;
 
 import pl.michaldobrowolski.bakingapp.R;
@@ -20,11 +22,13 @@ public class RecipeMasterListAdapter extends RecyclerView.Adapter<RecipeMasterLi
     private final MasterListAdapterOnClickHandler masterListAdapterOnClickHandler;
     private List<Recipe> mRecipeItems;
     private Recipe mRecipe;
+    private String mJsonRetrofitResult;
 
     // Constructor
-    public RecipeMasterListAdapter(List<Recipe> recipeList, MasterListAdapterOnClickHandler listClickHandler) {
+    public RecipeMasterListAdapter(List<Recipe> recipeList, String gson, MasterListAdapterOnClickHandler listClickHandler) {
         this.mRecipeItems = recipeList;
         this.masterListAdapterOnClickHandler = listClickHandler;
+        this.mJsonRetrofitResult = gson;
     }
 
     @NonNull
@@ -94,6 +98,7 @@ public class RecipeMasterListAdapter extends RecyclerView.Adapter<RecipeMasterLi
         public void onClick(View v) {
             int recipePosition = getAdapterPosition();
             masterListAdapterOnClickHandler.onClickRecipe(recipePosition);
+            // TODO: mJsonRetrofitResult -> I have to pass this value as EXTRA to the RecipeDetailsActivity
         }
     }
 }
