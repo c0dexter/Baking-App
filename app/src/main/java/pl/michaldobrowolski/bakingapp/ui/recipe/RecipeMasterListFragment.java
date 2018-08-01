@@ -82,7 +82,7 @@ public class RecipeMasterListFragment extends android.support.v4.app.Fragment im
                     //fetchingData(response);
                     mRecipeList = response.body();
                     mJsonRetrofitResult = new Gson().toJson(mRecipeList);
-                    mAdapter = new RecipeMasterListAdapter(mRecipeList, mJsonRetrofitResult, RecipeMasterListFragment.this);
+                    mAdapter = new RecipeMasterListAdapter(mContext, mRecipeList, mJsonRetrofitResult, RecipeMasterListFragment.this);
                     mRecyclerView.setAdapter(mAdapter);
                 } else {
                     Toast.makeText(mContext, "Error. Fetching data failed :(", Toast.LENGTH_SHORT).show();

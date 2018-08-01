@@ -1,5 +1,8 @@
 package pl.michaldobrowolski.bakingapp.ui.adapters;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -9,12 +12,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-
 import java.util.List;
 
 import pl.michaldobrowolski.bakingapp.R;
+import pl.michaldobrowolski.bakingapp.widget.WidgetService;
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Recipe;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class RecipeMasterListAdapter extends RecyclerView.Adapter<RecipeMasterListAdapter.ViewHolder> {
 
@@ -22,13 +26,15 @@ public class RecipeMasterListAdapter extends RecyclerView.Adapter<RecipeMasterLi
     private final MasterListAdapterOnClickHandler masterListAdapterOnClickHandler;
     private List<Recipe> mRecipeItems;
     private Recipe mRecipe;
-    private String mJsonRetrofitResult;
+    private String mJsonResult;
+    private Context mContext;
 
     // Constructor
-    public RecipeMasterListAdapter(List<Recipe> recipeList, String gson, MasterListAdapterOnClickHandler listClickHandler) {
+    public RecipeMasterListAdapter(Context context, List<Recipe> recipeList, String jsonResult, MasterListAdapterOnClickHandler listClickHandler) {
+        this.mContext = context;
         this.mRecipeItems = recipeList;
         this.masterListAdapterOnClickHandler = listClickHandler;
-        this.mJsonRetrofitResult = gson;
+        this.mJsonResult = jsonResult;
     }
 
     @NonNull
@@ -98,7 +104,21 @@ public class RecipeMasterListAdapter extends RecyclerView.Adapter<RecipeMasterLi
         public void onClick(View v) {
             int recipePosition = getAdapterPosition();
             masterListAdapterOnClickHandler.onClickRecipe(recipePosition);
-            // TODO: mJsonRetrofitResult -> I have to pass this value as EXTRA to the RecipeDetailsActivity
+
+            SharedPreferences.Editor sharedPrefEditor = mContext.getSharedPreferences("shared_pref_key", MODE_PRIVATE).edit();
+            sharedPrefEditor.putString("json_result_extra_key", mJsonResult);
+            sharedPrefEditor.apply();
+
+            if(Build.VERSION.SDK_INT > 25){
+                //Start the widget service to update the widget
+                WidgetService.startActionOpenRecipeAndroidO(mContext);
+            }
+            else{
+                //Start the widget service to update the widget
+                WidgetService.startActionOpenRecipe(mContext);
+            }
+
+            // TODO: mJsonResult -> I have to pass this value as EXTRA to the RecipeDetailsActivity
         }
     }
 }

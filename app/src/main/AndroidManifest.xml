@@ -24,7 +24,9 @@
         <activity android:name=".ui.recipe.steps.ingredeints.IngredientsActivity" />
         <activity android:name=".ui.recipe.steps.details.StepDetailsActivity" />
 
-        <receiver android:name=".RecipeWidgetProvider">
+        <service android:name=".widget.WidgetService"/>
+
+        <receiver android:name=".widget.RecipeWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>

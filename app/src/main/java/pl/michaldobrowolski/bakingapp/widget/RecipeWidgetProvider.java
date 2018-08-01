@@ -1,4 +1,4 @@
-package pl.michaldobrowolski.bakingapp;
+package pl.michaldobrowolski.bakingapp.widget;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -7,8 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
-import pl.michaldobrowolski.bakingapp.api.model.pojo.Ingredient;
-import pl.michaldobrowolski.bakingapp.ui.recipe.steps.StepsActivity;
+import pl.michaldobrowolski.bakingapp.R;
 import pl.michaldobrowolski.bakingapp.ui.recipe.steps.ingredeints.IngredientsActivity;
 
 /**
@@ -16,13 +15,11 @@ import pl.michaldobrowolski.bakingapp.ui.recipe.steps.ingredeints.IngredientsAct
  */
 public class RecipeWidgetProvider extends AppWidgetProvider {
 
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
+    static void updateAppWidget(Context context, String jsonIngredients, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
-        CharSequence widgetText = context.getString(R.string.appwidget_text);
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget);
-        views.setTextViewText(R.id.appwidget_text, widgetText);
 
         // Create the intent
         Intent intent = new Intent(context, IngredientsActivity.class);
@@ -31,9 +28,14 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         // Create the pending intent that will wrap our intent
         PendingIntent pendingIntent = PendingIntent.getActivity(context,0,intent,0);
 
+        if(jsonIngredients.equals("")){
+            jsonIngredients = "No ingredients yet!";
+        }
+
+        views.setTextViewText(R.id.appwidget_text, jsonIngredients);
+
         // OnClick intent for textview
         views.setOnClickPendingIntent(R.id.appwidget_text, pendingIntent);
-
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
@@ -41,10 +43,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        // There may be multiple widgets active, so update all of them
-        for (int appWidgetId : appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId);
-        }
+            WidgetService.startActionOpenRecipe(context);
     }
 
     @Override
@@ -56,5 +55,13 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
     public void onDisabled(Context context) {
         // Enter relevant functionality for when the last widget is disabled
     }
+
+    public static void updateWidgetRecipe(Context context, String jsonIngredients, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+        // There may be multiple widgets active, so update all of them
+        for (int appWidgetId : appWidgetIds) {
+            updateAppWidget(context, jsonIngredients, appWidgetManager, appWidgetId);
+        }
+    }
+
 }
 
