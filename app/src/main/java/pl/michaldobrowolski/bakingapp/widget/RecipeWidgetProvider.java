@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.widget.RemoteViews;
 
 import pl.michaldobrowolski.bakingapp.R;
-import pl.michaldobrowolski.bakingapp.ui.recipe.steps.ingredeints.IngredientsActivity;
+import pl.michaldobrowolski.bakingapp.ui.recipe.MainActivity;
 
 /**
  * Implementation of App Widget functionality.
@@ -22,7 +22,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget);
 
         // Create the intent
-        Intent intent = new Intent(context, IngredientsActivity.class);
+        Intent intent = new Intent(context, MainActivity.class);
         intent.putExtra("widget_extra","CAME_FROM_WIDGET");
 
         // Create the pending intent that will wrap our intent
@@ -49,11 +49,13 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
     @Override
     public void onEnabled(Context context) {
         // Enter relevant functionality for when the first widget is created
+        // Empty now
     }
 
     @Override
     public void onDisabled(Context context) {
         // Enter relevant functionality for when the last widget is disabled
+        // Empty now
     }
 
     public static void updateWidgetRecipe(Context context, String jsonIngredients, AppWidgetManager appWidgetManager, int[] appWidgetIds) {

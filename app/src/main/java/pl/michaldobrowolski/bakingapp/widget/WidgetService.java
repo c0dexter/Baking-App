@@ -24,7 +24,7 @@ import pl.michaldobrowolski.bakingapp.api.model.pojo.Recipe;
 
 public class WidgetService extends IntentService {
 
-    private static final String ACTION_OPEN_RECIPE = "pl.michaldobrowolski.bakingapp.widget.widget_service";
+    private static final String ACTION_OPEN_APP = "pl.michaldobrowolski.bakingapp.widget.widget_service";
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
@@ -37,6 +37,20 @@ public class WidgetService extends IntentService {
 
     public WidgetService() {
         super("WidgetService");
+    }
+
+    // Use the service to performing action for Android < And.ver "O"
+    public static void startActionOpenRecipe(Context context) {
+        Intent intent = new Intent(context, WidgetService.class);
+        intent.setAction(ACTION_OPEN_APP);
+        context.startService(intent);
+    }
+
+    // For And.ver >= "O"
+    public static void startActionOpenRecipeAndroidO(Context context) {
+        Intent intent = new Intent(context, WidgetService.class);
+        intent.setAction(ACTION_OPEN_APP);
+        ContextCompat.startForegroundService(context, intent);
     }
 
     @Override
@@ -61,7 +75,7 @@ public class WidgetService extends IntentService {
     protected void onHandleIntent(@Nullable Intent intent) {
         if (intent != null) {
             final String action = intent.getAction();
-            if (ACTION_OPEN_RECIPE.equals(action)) {
+            if (ACTION_OPEN_APP.equals(action)) {
                 handleActionOpenRecipe();
             }
         }
@@ -69,45 +83,31 @@ public class WidgetService extends IntentService {
 
     private void handleActionOpenRecipe() {
 
-        //Get data from shared pref
+        // Get the data from a shared pref
         SharedPreferences sharedpreferences =
-                getSharedPreferences("shared_pref_key",MODE_PRIVATE);
+                getSharedPreferences("shared_pref_key", MODE_PRIVATE);
         String jsonRecipe = sharedpreferences.getString("json_result_extra_key", "");
 
         StringBuilder stringBuilder = new StringBuilder();
         Gson gson = new Gson();
         Recipe recipe = gson.fromJson(jsonRecipe, Recipe.class);
+
         List<Ingredient> ingredientList = recipe.getmIngredients();
-        for(Ingredient ingredient : ingredientList){
-            String quantity = String.valueOf(ingredient.getQuantity());
-            String measure = ingredient.getMeasure();
+        for (Ingredient ingredient : ingredientList) {
+            String qty = String.valueOf(ingredient.getQuantity());
+            String unitType = ingredient.getMeasure();
             String ingredientName = ingredient.getIngredient();
-            String line = quantity + " " + measure + " " + ingredientName;
-            stringBuilder.append( line + "\n");
+            String ingredientEntry = qty + " [" + unitType + "] -> " + ingredientName;
+            stringBuilder.append(ingredientEntry + "\n");
         }
+
         String ingredientsString = stringBuilder.toString();
 
-        //Here we create AppWidgetManager to update AppWidget state
+        // Creating an AppWidgetManager to updating the AppWidget state
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
-
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this, RecipeWidgetProvider.class));
 
-        //Pass recipe info into the widget provider
+        // Passing a recipe info into the WidgetProvider
         RecipeWidgetProvider.updateWidgetRecipe(this, ingredientsString, appWidgetManager, appWidgetIds);
-    }
-
-
-    // Trigger the service to perform the action
-    public static void startActionOpenRecipe(Context context) {
-        Intent intent = new Intent(context, WidgetService.class);
-        intent.setAction(ACTION_OPEN_RECIPE);
-        context.startService(intent);
-    }
-
-    // For Android O and above
-    public static void startActionOpenRecipeAndroidO(Context context){
-        Intent intent = new Intent(context, WidgetService.class);
-        intent.setAction(ACTION_OPEN_RECIPE);
-        ContextCompat.startForegroundService(context,intent);
     }
 }

@@ -12,11 +12,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+
 import java.util.List;
 
 import pl.michaldobrowolski.bakingapp.R;
-import pl.michaldobrowolski.bakingapp.widget.WidgetService;
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Recipe;
+import pl.michaldobrowolski.bakingapp.widget.WidgetService;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -24,6 +28,7 @@ public class RecipeMasterListAdapter extends RecyclerView.Adapter<RecipeMasterLi
 
     private final String TAG = this.getClass().getSimpleName();
     private final MasterListAdapterOnClickHandler masterListAdapterOnClickHandler;
+    String recipeJson;
     private List<Recipe> mRecipeItems;
     private Recipe mRecipe;
     private String mJsonResult;
@@ -47,12 +52,14 @@ public class RecipeMasterListAdapter extends RecyclerView.Adapter<RecipeMasterLi
 
     @Override
     public void onBindViewHolder(@NonNull final RecipeMasterListAdapter.ViewHolder holder, int position) {
+
         TextView mainRecipeNameTv = holder.tvCardRecipeName;
         ImageView mainRecipePhotoIv = holder.ivCardPhotoRecipe;
 
         mRecipe = mRecipeItems.get(position);
         mainRecipeNameTv.setText(mRecipe.getmName());
         setProperCakePhoto(mRecipe, mainRecipePhotoIv);
+
     }
 
     private void setProperCakePhoto(Recipe recipe, ImageView imageView) {
@@ -85,6 +92,14 @@ public class RecipeMasterListAdapter extends RecyclerView.Adapter<RecipeMasterLi
         return mRecipeItems.size();
     }
 
+    // Transform selected Recipe to the JSON String for future operation on Shared Pref
+    private String transformJsonToString(String jsonResult, int position) {
+        JsonElement element = new JsonParser().parse(jsonResult);
+        JsonArray elementAsJsonArray = element.getAsJsonArray();
+        JsonElement recipeElement = elementAsJsonArray.get(position);
+        return recipeElement.toString();
+    }
+
     public interface MasterListAdapterOnClickHandler {
         void onClickRecipe(int recipeCardPosition);
     }
@@ -105,20 +120,18 @@ public class RecipeMasterListAdapter extends RecyclerView.Adapter<RecipeMasterLi
             int recipePosition = getAdapterPosition();
             masterListAdapterOnClickHandler.onClickRecipe(recipePosition);
 
+            recipeJson = transformJsonToString(mJsonResult, recipePosition);
             SharedPreferences.Editor sharedPrefEditor = mContext.getSharedPreferences("shared_pref_key", MODE_PRIVATE).edit();
-            sharedPrefEditor.putString("json_result_extra_key", mJsonResult);
+            sharedPrefEditor.putString("json_result_extra_key", recipeJson);
             sharedPrefEditor.apply();
 
-            if(Build.VERSION.SDK_INT > 25){
+            if (Build.VERSION.SDK_INT > 25) {
                 //Start the widget service to update the widget
                 WidgetService.startActionOpenRecipeAndroidO(mContext);
-            }
-            else{
+            } else {
                 //Start the widget service to update the widget
                 WidgetService.startActionOpenRecipe(mContext);
             }
-
-            // TODO: mJsonResult -> I have to pass this value as EXTRA to the RecipeDetailsActivity
         }
     }
 }

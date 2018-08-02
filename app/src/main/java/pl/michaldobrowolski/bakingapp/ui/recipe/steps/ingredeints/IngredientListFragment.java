@@ -21,11 +21,11 @@ import pl.michaldobrowolski.bakingapp.api.model.pojo.Ingredient;
 import pl.michaldobrowolski.bakingapp.ui.adapters.RecipeIngredientListAdapter;
 
 public class IngredientListFragment extends Fragment implements RecipeIngredientListAdapter.IngredientListAdapterOnClickHandler {
-    // -------------------- Properties --------------------//
-    private final String TAG = this.getClass().getSimpleName();
     // Bundle keys
     private static final String BUNDLE_INGREDIENTS_LIST_KEY = "fragment_ingredient_list";
     private static final String BUNDLE_RECIPE_NAME_KEY = "recipe_name";
+    // -------------------- Properties --------------------//
+    private final String TAG = this.getClass().getSimpleName();
     // Properties
     private Context mContext;
     private ArrayList<Ingredient> mIngredientList = new ArrayList<>();
