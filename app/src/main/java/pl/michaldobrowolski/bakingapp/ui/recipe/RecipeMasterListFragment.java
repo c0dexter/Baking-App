@@ -40,6 +40,10 @@ public class RecipeMasterListFragment extends android.support.v4.app.Fragment im
     private RecyclerView.LayoutManager mLayoutManager;
     private String mJsonRetrofitResult;
 
+    public static final String INTENT_RECIPE_KEY = "recipe";
+    public static final String BUNDLE_RECIPE_LIST_KEY = "recipeSteps";
+
+
     public RecipeMasterListFragment() {
     }
 
@@ -105,10 +109,10 @@ public class RecipeMasterListFragment extends android.support.v4.app.Fragment im
         Toast.makeText(mContext, "Recipe of " + mRecipeList.get(recipeCardPosition).getmName(), Toast.LENGTH_SHORT).show();
 
         Bundle bundle = new Bundle();
-        bundle.putParcelable("recipeSteps", mRecipeList.get(recipeCardPosition));
+        bundle.putParcelable(BUNDLE_RECIPE_LIST_KEY, mRecipeList.get(recipeCardPosition));
 
         final Intent intent = new Intent(getContext(), StepsActivity.class);
-        intent.putExtra("recipe", bundle);
+        intent.putExtra(INTENT_RECIPE_KEY, bundle);
         startActivity(intent);
     }
 
