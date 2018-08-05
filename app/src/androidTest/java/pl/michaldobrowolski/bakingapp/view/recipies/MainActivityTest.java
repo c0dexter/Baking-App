@@ -18,6 +18,7 @@ import java.util.List;
 
 import pl.michaldobrowolski.bakingapp.R;
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Recipe;
+import pl.michaldobrowolski.bakingapp.api.service.ApiClient;
 import pl.michaldobrowolski.bakingapp.api.service.ApiInterface;
 import pl.michaldobrowolski.bakingapp.ui.recipe.MainActivity;
 import pl.michaldobrowolski.bakingapp.ui.recipe.RecipeMasterListFragment;
@@ -44,6 +45,7 @@ public class MainActivityTest {
 
     @Before
     public void loadData() {
+        mApiInterface = ApiClient.getClient().create(ApiInterface.class);
         Call<List<Recipe>> call = mApiInterface.fetchRecipes();
         call.enqueue(new Callback<List<Recipe>>() {
             @Override
@@ -74,7 +76,7 @@ public class MainActivityTest {
         // Max 2000 millis, no more!
         Thread.sleep(2000);
 
-        onView(withId(R.id.master_list_fragment))
+        onView(withId(R.id.master_list_fragment)) // TODO: ERROR IS HERE
                 .perform(RecyclerViewActions.actionOnItemAtPosition(position, click()));
 
         intended(toPackage("pl.michaldobrowolski.bakingapp"));

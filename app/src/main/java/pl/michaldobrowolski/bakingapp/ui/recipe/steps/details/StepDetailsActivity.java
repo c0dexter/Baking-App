@@ -25,10 +25,10 @@ public class StepDetailsActivity extends AppCompatActivity { //implements OnBack
     // -------------------- Properties --------------------//
     final static String TAG = StepsActivity.class.getSimpleName();
     // Bundle keys
-    private static final String MAIN_BUNDLE_KEY = "step_detail";
-    private static final String BUNDLE_ARRAY_STEPS_KEY = "step_array_bundle_key";
-    private static final String BUNDLE_STEP_ID_KEY = "step_position_bundle_key";
-    private static final String BUNDLE_RECIPE_NAME_KEY = "recipe_name_bundle_key";
+    public static final String MAIN_BUNDLE_KEY = "step_detail";
+    public static final String BUNDLE_ARRAY_STEPS_KEY = "step_array_bundle_key";
+    public static final String BUNDLE_STEP_ID_KEY = "step_position_bundle_key";
+    public static final String BUNDLE_RECIPE_NAME_KEY = "recipe_name_bundle_key";
     // UI elements
     public TextView mStepCounterTv;
     public ImageButton backBtn;
