@@ -1,6 +1,11 @@
 package pl.michaldobrowolski.bakingapp;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.lang.reflect.Type;
 
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Recipe;
 
@@ -160,6 +165,11 @@ public class RecipeStaticObjectPattern {
                     "   ";
 
     public static Recipe getRecipeStaticData() {
-        return new Gson().fromJson(STATIC_DATA_TEXT, Recipe.class);
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setLenient();
+        Gson gson = gsonBuilder.create();
+
+        Recipe recipe = gson.fromJson(STATIC_DATA_TEXT, (Type) Recipe.class);
+        return recipe;
     }
 }

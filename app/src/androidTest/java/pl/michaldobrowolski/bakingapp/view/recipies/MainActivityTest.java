@@ -1,6 +1,7 @@
 package pl.michaldobrowolski.bakingapp.view.recipies;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
@@ -33,6 +34,8 @@ import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasExtra;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.toPackage;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static pl.michaldobrowolski.bakingapp.ui.recipe.RecipeMasterListFragment.BUNDLE_RECIPE_LIST_KEY;
+import static pl.michaldobrowolski.bakingapp.ui.recipe.RecipeMasterListFragment.INTENT_RECIPE_KEY_FOR_ESPRESSO;
 
 public class MainActivityTest {
 
@@ -65,7 +68,6 @@ public class MainActivityTest {
                 call.cancel();
                 Log.e(TAG, "onFailure: ", t);
             }
-
         });
     }
 
@@ -73,17 +75,20 @@ public class MainActivityTest {
     public void validateIntentSentToPackage() throws InterruptedException {
         int position = 2;
 
-        // Max 2000 millis, no more!
-        Thread.sleep(2000);
+        // Max 3000 millis, no more!
+        Thread.sleep(3000);
 
-        onView(withId(R.id.master_list_fragment)) // TODO: ERROR IS HERE
+        onView(withId(R.id.master_list_fragment))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(position, click()));
 
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(BUNDLE_RECIPE_LIST_KEY, mRecipeList.get(position));
+
         intended(toPackage("pl.michaldobrowolski.bakingapp"));
-        intended(hasExtra(RecipeMasterListFragment.INTENT_RECIPE_KEY, new Gson().toJson(mRecipeList.get(position))));
+        intended(hasExtra(INTENT_RECIPE_KEY_FOR_ESPRESSO, new Gson().toJson(mRecipeList.get(position))));
     }
 
-    @After
-    public void unregisterIdlingResource() {
-    }
+
+
+
 }

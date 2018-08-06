@@ -6,6 +6,7 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -36,8 +37,9 @@ public class StepDetailsActivityTest {
     @Before
     public void setUp() {
         mRecipe = RecipeStaticObjectPattern.getRecipeStaticData();
+        String gson = new Gson().toJson(mRecipe.getmSteps());
         final Intent intent = new Intent();
-        intent.putExtra(StepDetailsActivity.MAIN_BUNDLE_KEY, new Gson().toJson(mRecipe.getmSteps()));
+        intent.putExtra(StepDetailsActivity.MAIN_BUNDLE_KEY, gson);
         intent.putExtra(StepDetailsActivity.BUNDLE_STEP_ID_KEY, STEP_INDEX);
         ActivityRule.launchActivity(intent);
     }

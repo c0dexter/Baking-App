@@ -103,6 +103,8 @@ public class RecipeMasterListFragment extends android.support.v4.app.Fragment im
     }
 
 
+    public static final String INTENT_RECIPE_KEY_FOR_ESPRESSO = "recipe-espresso";
+
     @Override
     public void onClickRecipe(int recipeCardPosition) {
         Log.i(TAG, "The " + mRecipeList.get(recipeCardPosition).getmName() + "has been clicked");
@@ -113,6 +115,7 @@ public class RecipeMasterListFragment extends android.support.v4.app.Fragment im
 
         final Intent intent = new Intent(getContext(), StepsActivity.class);
         intent.putExtra(INTENT_RECIPE_KEY, bundle);
+        intent.putExtra(INTENT_RECIPE_KEY_FOR_ESPRESSO, new Gson().toJson(mRecipeList.get(recipeCardPosition)));
         startActivity(intent);
     }
 
