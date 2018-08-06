@@ -1,16 +1,13 @@
 package pl.michaldobrowolski.bakingapp;
 
-import android.util.Log;
-
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.lang.reflect.Type;
 
 import pl.michaldobrowolski.bakingapp.api.model.pojo.Recipe;
 
 public class RecipeStaticObjectPattern {
-    public static final String STATIC_DATA_TEXT =
+    public static String STATIC_DATA_TEXT =
             "   {\n" +
                     "      \"id\":3,\n" +
                     "      \"image\":\"\",\n" +
@@ -161,15 +158,11 @@ public class RecipeStaticObjectPattern {
                     "            \"videoURL\":\"https://d17h27t6h515a5.cloudfront.net/topher/2017/April/590129ad_17-frost-all-around-cake-yellow-cake/17-frost-all-around-cake-yellow-cake.mp4\"\n" +
                     "         }\n" +
                     "      ]\n" +
-                    "   },\n" +
+                    "   }\n" +
                     "   ";
 
     public static Recipe getRecipeStaticData() {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.setLenient();
-        Gson gson = gsonBuilder.create();
-
-        Recipe recipe = gson.fromJson(STATIC_DATA_TEXT, (Type) Recipe.class);
+        Recipe recipe = new Gson().fromJson(STATIC_DATA_TEXT, (Type) Recipe.class);
         return recipe;
     }
 }

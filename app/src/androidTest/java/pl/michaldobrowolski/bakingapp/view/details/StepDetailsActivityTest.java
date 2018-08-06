@@ -39,7 +39,7 @@ public class StepDetailsActivityTest {
         mRecipe = RecipeStaticObjectPattern.getRecipeStaticData();
         String gson = new Gson().toJson(mRecipe.getmSteps());
         final Intent intent = new Intent();
-        intent.putExtra(StepDetailsActivity.MAIN_BUNDLE_KEY, gson);
+        intent.putExtra(StepDetailsActivity.MAIN_BUNDLE_KEY, gson); // TODO: check sending data here
         intent.putExtra(StepDetailsActivity.BUNDLE_STEP_ID_KEY, STEP_INDEX);
         ActivityRule.launchActivity(intent);
     }

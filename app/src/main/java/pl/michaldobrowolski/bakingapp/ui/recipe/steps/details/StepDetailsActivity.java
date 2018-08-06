@@ -54,6 +54,8 @@ public class StepDetailsActivity extends AppCompatActivity { //implements OnBack
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_step_detail);
 
+
+
         // Mapping
         mStepCounterTv = findViewById(R.id.text_step_counter);
         backBtn = findViewById(R.id.button_previous_step);
@@ -122,6 +124,7 @@ public class StepDetailsActivity extends AppCompatActivity { //implements OnBack
         stepDetailsFragment = new StepDetailsFragment();
         stepDetailsFragment.setArguments(makeStepDetailsBundle());
 
+
         // Choose a method delivery data to fragment. For new view: "add", for existed view "replace"
         FragmentManager fm = getSupportFragmentManager();
         if (!fragmentExist) {
@@ -138,11 +141,12 @@ public class StepDetailsActivity extends AppCompatActivity { //implements OnBack
 
     private void getStepDetailsDataFromBundle(String mainBundleKey, String StepsArrayKey, String stepPositionClicked, String recipeNameKey) {
         Bundle stepDetailBundle = getIntent().getExtras();
+        // Log.d("TESTNULL", String.valueOf(stepDetailBundle==null));
         if (stepDetailBundle != null) {
             if (stepDetailBundle.containsKey(mainBundleKey)) {
                 stepDetailBundle = stepDetailBundle.getBundle(mainBundleKey);
-                mStepArrayList = Objects.requireNonNull(stepDetailBundle).getParcelableArrayList(StepsArrayKey);
-                mCurrentStep = Objects.requireNonNull(stepDetailBundle).getInt(stepPositionClicked);
+                mStepArrayList = stepDetailBundle.getParcelableArrayList(StepsArrayKey); // TODO: because I have to get this data here
+                mCurrentStep = stepDetailBundle.getInt(stepPositionClicked);
                 mRecipeName = stepDetailBundle.getString(recipeNameKey);
             } else {
                 Log.i(TAG, "Cannot get object from bundle. Incorrect bundle key string.");
