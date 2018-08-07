@@ -54,7 +54,6 @@ public class StepDetailsActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_step_detail);
 
-
         // Mapping
         mStepCounterTv = findViewById(R.id.text_step_counter);
         backBtn = findViewById(R.id.button_previous_step);
@@ -73,7 +72,6 @@ public class StepDetailsActivity extends AppCompatActivity {
 
         // Set title on the ActionBar
         setTitle(mRecipeName + "'s instructions");
-
 
         // Check if saved instance state exist and set a fragmentAdded flag
         if (savedInstanceState != null) {
@@ -122,7 +120,6 @@ public class StepDetailsActivity extends AppCompatActivity {
         // Main step details fragment
         stepDetailsFragment = new StepDetailsFragment();
         stepDetailsFragment.setArguments(makeStepDetailsBundle());
-
 
         // Choose a method delivery data to fragment. For new view: "add", for existed view "replace"
         FragmentManager fm = getSupportFragmentManager();
