@@ -21,14 +21,14 @@ import pl.michaldobrowolski.bakingapp.ui.recipe.steps.StepsActivity;
 import pl.michaldobrowolski.bakingapp.utils.UtilityHelper;
 
 
-public class StepDetailsActivity extends AppCompatActivity { //implements OnBackButtonClickedListener, OnNextButtonClickedListener
-    // -------------------- Properties --------------------//
-    final static String TAG = StepsActivity.class.getSimpleName();
+public class StepDetailsActivity extends AppCompatActivity {
     // Bundle keys
     public static final String MAIN_BUNDLE_KEY = "step_detail";
     public static final String BUNDLE_ARRAY_STEPS_KEY = "step_array_bundle_key";
     public static final String BUNDLE_STEP_ID_KEY = "step_position_bundle_key";
     public static final String BUNDLE_RECIPE_NAME_KEY = "recipe_name_bundle_key";
+    // -------------------- Properties --------------------//
+    final static String TAG = StepsActivity.class.getSimpleName();
     // UI elements
     public TextView mStepCounterTv;
     public ImageButton backBtn;
@@ -53,7 +53,6 @@ public class StepDetailsActivity extends AppCompatActivity { //implements OnBack
         super.onCreate(savedInstanceState);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_step_detail);
-
 
 
         // Mapping
@@ -204,7 +203,6 @@ public class StepDetailsActivity extends AppCompatActivity { //implements OnBack
         outState.putBoolean("fragment_added", fragmentAdded);
         outState.putInt("clicked_step_position", mCurrentStep);
     }
-
 
     private void setStepsCounter(int stepId, int totalStepsAmount) {
         mCurrentStep = stepId;

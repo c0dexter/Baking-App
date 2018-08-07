@@ -19,7 +19,7 @@ public class IngredientsActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_ingredients);
 
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             fragmentAdded = savedInstanceState.getBoolean("fragment_added");
         }
         addIngredientListFragment(fragmentAdded);
@@ -41,7 +41,7 @@ public class IngredientsActivity extends AppCompatActivity {
         ingredientListFragment.setArguments(ingredientsBundle);
 
         FragmentManager fm = getSupportFragmentManager();
-        if(!fragmentExist){
+        if (!fragmentExist) {
             fm.beginTransaction()
                     .add(R.id.ingredients_list_container, ingredientListFragment)
                     .commit();

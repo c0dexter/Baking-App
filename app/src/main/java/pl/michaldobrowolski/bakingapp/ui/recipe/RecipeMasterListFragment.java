@@ -29,8 +29,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class RecipeMasterListFragment extends android.support.v4.app.Fragment implements RecipeMasterListAdapter.MasterListAdapterOnClickHandler {
+    // -------------------- Properties --------------------//
+    // Bundle Keys
+    public static final String INTENT_RECIPE_KEY = "recipe";
+    public static final String BUNDLE_RECIPE_LIST_KEY = "recipeSteps";
+    public static final String INTENT_RECIPE_KEY_FOR_ESPRESSO = "recipe-espresso";
     private final String TAG = this.getClass().getSimpleName();
-
     // Items mapping
     public Context mContext;
     private ApiInterface mApiInterface;
@@ -39,10 +43,7 @@ public class RecipeMasterListFragment extends android.support.v4.app.Fragment im
     private RecipeMasterListAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private String mJsonRetrofitResult;
-
-    public static final String INTENT_RECIPE_KEY = "recipe";
-    public static final String BUNDLE_RECIPE_LIST_KEY = "recipeSteps";
-
+    // ------------------ End Of Properties ------------------ //
 
     public RecipeMasterListFragment() {
     }
@@ -65,7 +66,6 @@ public class RecipeMasterListFragment extends android.support.v4.app.Fragment im
         mApiInterface = ApiClient.getClient().create(ApiInterface.class);
         mRecyclerView.setHasFixedSize(true);
 
-        //mLayoutManager = new LinearLayoutManager(mContext);
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             mLayoutManager = new GridLayoutManager(mContext, 2);
         } else {
@@ -101,9 +101,6 @@ public class RecipeMasterListFragment extends android.support.v4.app.Fragment im
             }
         });
     }
-
-
-    public static final String INTENT_RECIPE_KEY_FOR_ESPRESSO = "recipe-espresso";
 
     @Override
     public void onClickRecipe(int recipeCardPosition) {

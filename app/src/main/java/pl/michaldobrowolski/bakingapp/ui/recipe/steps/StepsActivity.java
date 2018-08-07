@@ -30,9 +30,9 @@ public class StepsActivity extends AppCompatActivity implements StepListFragment
     private static final String SAVE_INSTANCE_STATE_FRAGMENT_ADDED = "fragment_added";
     private static final String SAVE_INSTANCE_STATE_CLICKED_STEP = "step_number_clicked";
 
+    // Properties
     Bundle stepDetailDefaultBundle;
     boolean mTwoPane;
-    // Properties
     private Bundle bundle;
     private Bundle stepsBundle;
     private Recipe mRecipe;
@@ -99,7 +99,6 @@ public class StepsActivity extends AppCompatActivity implements StepListFragment
         ingredientsCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Ingredients Card View", Toast.LENGTH_SHORT).show();
                 Log.i("CARD VIEW", "Ingredients Card View has been  clicked");
                 startActivity(ingredientIntent);
             }
@@ -146,12 +145,6 @@ public class StepsActivity extends AppCompatActivity implements StepListFragment
         Objects.requireNonNull(getSupportActionBar()).setTitle(title);
     }
 
-    /**
-     * Methods for getting recipe objects from bundle and saving those in the List
-     *
-     * @param bundleKey           - String key of bundle
-     * @param bundleParcelableKey - String key of Parcelable objects
-     */
     private void getRecipeFromBundle(String bundleKey, String bundleParcelableKey) {
 
         if (bundle != null) {
