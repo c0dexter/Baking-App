@@ -141,7 +141,7 @@ public class StepDetailsActivity extends AppCompatActivity {
         if (stepDetailBundle != null) {
             if (stepDetailBundle.containsKey(mainBundleKey)) {
                 stepDetailBundle = stepDetailBundle.getBundle(mainBundleKey);
-                mStepArrayList = stepDetailBundle.getParcelableArrayList(StepsArrayKey); // TODO: because I have to get this data here
+                mStepArrayList = stepDetailBundle.getParcelableArrayList(StepsArrayKey);
                 mCurrentStep = stepDetailBundle.getInt(stepPositionClicked);
                 mRecipeName = stepDetailBundle.getString(recipeNameKey);
             } else {
@@ -165,7 +165,6 @@ public class StepDetailsActivity extends AppCompatActivity {
     }
 
     public void onBackButtonClicked(int newPositionValue) {
-        Toast.makeText(this, "Previous step", Toast.LENGTH_SHORT).show();
         mCurrentStep = newPositionValue;
         getDataForSpecificStep(mCurrentStep);
         addStepDetailsFragment(fragmentAdded);
@@ -174,24 +173,11 @@ public class StepDetailsActivity extends AppCompatActivity {
     }
 
     public void onNextButtonClicked(int newPositionValue) {
-        Toast.makeText(this, "Next step", Toast.LENGTH_SHORT).show();
         mCurrentStep = newPositionValue;
         getDataForSpecificStep(mCurrentStep);
         addStepDetailsFragment(fragmentAdded);
         setStepsCounter(mCurrentStep, mStepArrayList.size());
         showOrHideNavigationButtons();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        stepDetailsFragment.onPause();
-    }
-
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        stepDetailsFragment.onResume();
     }
 
     @Override
