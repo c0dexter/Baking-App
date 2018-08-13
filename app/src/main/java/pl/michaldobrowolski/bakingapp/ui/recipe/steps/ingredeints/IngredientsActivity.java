@@ -12,12 +12,18 @@ import pl.michaldobrowolski.bakingapp.R;
 public class IngredientsActivity extends AppCompatActivity {
 
     private boolean fragmentAdded;
+    private FragmentManager fm;
+    private IngredientListFragment ingredientListFragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_ingredients);
+
+        // Initializing
+        fm = getSupportFragmentManager();
+        ingredientListFragment = new IngredientListFragment();
 
         if (savedInstanceState != null) {
             fragmentAdded = savedInstanceState.getBoolean("fragment_added");
@@ -37,10 +43,7 @@ public class IngredientsActivity extends AppCompatActivity {
 
     private void addIngredientListFragment(boolean fragmentExist) {
         Bundle ingredientsBundle = getIntent().getExtras();
-        IngredientListFragment ingredientListFragment = new IngredientListFragment();
         ingredientListFragment.setArguments(ingredientsBundle);
-
-        FragmentManager fm = getSupportFragmentManager();
         if (!fragmentExist) {
             fm.beginTransaction()
                     .add(R.id.ingredients_list_container, ingredientListFragment)

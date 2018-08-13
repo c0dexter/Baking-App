@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -43,9 +42,11 @@ public class StepDetailsActivity extends AppCompatActivity {
     private String mDescription;
     private String mVideoUrl;
     private String mThumbnailUrl;
-    private StepDetailsFragment stepDetailsFragment;
+    private StepDetailsFragment mStepDetailsFragment;
     private UtilityHelper utilityHelper = new UtilityHelper();
     private boolean fragmentAdded;
+    private FragmentManager fm;
+    private boolean navigationClicked = false;
     // ------------------ End Of Properties ------------------ //
 
     @Override
@@ -55,6 +56,8 @@ public class StepDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_step_detail);
 
         // Mapping
+        mStepDetailsFragment = new StepDetailsFragment();
+        fm = getSupportFragmentManager();
         mStepCounterTv = findViewById(R.id.text_step_counter);
         backBtn = findViewById(R.id.button_previous_step);
         nextBtn = findViewById(R.id.button_next_step);
@@ -77,6 +80,10 @@ public class StepDetailsActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             fragmentAdded = savedInstanceState.getBoolean("fragment_added");
             mCurrentStep = savedInstanceState.getInt("clicked_step_position");
+            if (!navigationClicked) {
+                mStepDetailsFragment = (StepDetailsFragment) fm.getFragment(savedInstanceState, "step_details_fragment");
+            }
+
         }
 
         getDataForSpecificStep(mCurrentStep);
@@ -118,26 +125,22 @@ public class StepDetailsActivity extends AppCompatActivity {
 
     private void addStepDetailsFragment(boolean fragmentExist) {
         // Main step details fragment
-        stepDetailsFragment = new StepDetailsFragment();
-        stepDetailsFragment.setArguments(makeStepDetailsBundle());
-
+        mStepDetailsFragment.setArguments(makeStepDetailsBundle());
         // Choose a method delivery data to fragment. For new view: "add", for existed view "replace"
-        FragmentManager fm = getSupportFragmentManager();
         if (!fragmentExist) {
             fm.beginTransaction()
-                    .add(R.id.step_details_container, stepDetailsFragment)
+                    .add(R.id.step_details_container, mStepDetailsFragment)
                     .commit();
             fragmentAdded = true;
         } else {
             fm.beginTransaction()
-                    .replace(R.id.step_details_container, stepDetailsFragment)
+                    .replace(R.id.step_details_container, mStepDetailsFragment)
                     .commit();
         }
     }
 
     private void getStepDetailsDataFromBundle(String mainBundleKey, String StepsArrayKey, String stepPositionClicked, String recipeNameKey) {
         Bundle stepDetailBundle = getIntent().getExtras();
-        // Log.d("TESTNULL", String.valueOf(stepDetailBundle==null));
         if (stepDetailBundle != null) {
             if (stepDetailBundle.containsKey(mainBundleKey)) {
                 stepDetailBundle = stepDetailBundle.getBundle(mainBundleKey);
@@ -165,26 +168,23 @@ public class StepDetailsActivity extends AppCompatActivity {
     }
 
     public void onBackButtonClicked(int newPositionValue) {
+        navigationClicked = true;
         mCurrentStep = newPositionValue;
         getDataForSpecificStep(mCurrentStep);
+        mStepDetailsFragment = new StepDetailsFragment();
         addStepDetailsFragment(fragmentAdded);
         setStepsCounter(mCurrentStep, mStepArrayList.size());
         showOrHideNavigationButtons();
     }
 
     public void onNextButtonClicked(int newPositionValue) {
+        navigationClicked = true;
         mCurrentStep = newPositionValue;
         getDataForSpecificStep(mCurrentStep);
+        mStepDetailsFragment = new StepDetailsFragment();
         addStepDetailsFragment(fragmentAdded);
         setStepsCounter(mCurrentStep, mStepArrayList.size());
         showOrHideNavigationButtons();
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean("fragment_added", fragmentAdded);
-        outState.putInt("clicked_step_position", mCurrentStep);
     }
 
     private void setStepsCounter(int stepId, int totalStepsAmount) {
@@ -209,5 +209,14 @@ public class StepDetailsActivity extends AppCompatActivity {
         } else {
             backBtn.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        fm.putFragment(outState, "step_details_fragment", mStepDetailsFragment);
+        outState.putBoolean("fragment_added", fragmentAdded);
+        outState.putInt("clicked_step_position", mCurrentStep);
+
     }
 }
