@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.test.filters.SmallTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.util.DisplayMetrics;
 
 import com.google.gson.Gson;
 
@@ -26,6 +27,7 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.junit.Assume.assumeTrue;
 
 @RunWith(AndroidJUnit4.class)
 @SmallTest
@@ -34,6 +36,8 @@ public class StepDetailsActivityTest {
     private int mStepPosition;
     private String mRecipeName;
     private ArrayList<Step> mStepList = new ArrayList<>();
+    private boolean mIsScreenSw600dp;
+    private StepDetailsActivity mStepDetailsActivity;
     UtilityHelper utilityHelper = new UtilityHelper();
 
     @Rule
@@ -42,7 +46,11 @@ public class StepDetailsActivityTest {
             new ActivityTestRule<>(StepDetailsActivity.class, false, false);
 
     @Before
-    public void setUp() {
+    public void setUp()  throws  Exception {
+        // assumeTrue(!isScreenSw600dp());  // TODO: check this
+
+
+
         mRecipe = RecipeStaticObjectPattern.getRecipeStaticData();
         mStepList = (ArrayList<Step>) mRecipe.getmSteps();
         mRecipeName = mRecipe.getmName();
@@ -63,5 +71,14 @@ public class StepDetailsActivityTest {
         onView(withId(R.id.text_step_full_desc)).
                 // Use utilityHelper.removeRedundantCharactersFromText, because I use it on UI
                 check(matches(withText(utilityHelper.removeRedundantCharactersFromText("^(\\d*.\\s)", mRecipe.getmSteps().get(mStepPosition).getmDescription()))));
+    }
+
+    private boolean isScreenSw600dp() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        mStepDetailsActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        float widthDp = displayMetrics.widthPixels / displayMetrics.density;
+        float heightDp = displayMetrics.heightPixels / displayMetrics.density;
+        float screenSw = Math.min(widthDp, heightDp);
+        return screenSw >= 600;
     }
 }
