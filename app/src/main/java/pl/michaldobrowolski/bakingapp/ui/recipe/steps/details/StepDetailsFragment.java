@@ -64,6 +64,11 @@ public class StepDetailsFragment extends Fragment {
     public int mStepId;
     // ------------------ End Of Properties ------------------ //
 
+
+    public Context getmContext() {
+        return mContext;
+    }
+
     // Fragment must have: an empty constructor
     public StepDetailsFragment() {
     }
@@ -260,7 +265,6 @@ public class StepDetailsFragment extends Fragment {
         }
         outState.putLong(SAVED_INSTANCE_SELECTED_POSITION, mLastPlayerPositionTime);
         outState.putBoolean("exo_ready", mPlaybackReady);
-
     }
 
     // Release player

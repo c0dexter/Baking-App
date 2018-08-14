@@ -26,6 +26,7 @@ public class StepDetailsActivity extends AppCompatActivity {
     public static final String BUNDLE_ARRAY_STEPS_KEY = "step_array_bundle_key";
     public static final String BUNDLE_STEP_ID_KEY = "step_position_bundle_key";
     public static final String BUNDLE_RECIPE_NAME_KEY = "recipe_name_bundle_key";
+    public static final String BUNDLE_TABLET_TEST_KEY = "tablet_test";
     // -------------------- Properties --------------------//
     final static String TAG = StepsActivity.class.getSimpleName();
     // UI elements
@@ -47,6 +48,7 @@ public class StepDetailsActivity extends AppCompatActivity {
     private boolean fragmentAdded;
     private FragmentManager fm;
     private boolean navigationClicked = false;
+    private boolean isTest;
     // ------------------ End Of Properties ------------------ //
 
     @Override
@@ -55,6 +57,14 @@ public class StepDetailsActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_step_detail);
 
+        // Get data from bundle
+        getStepDetailsDataFromBundle(
+                MAIN_BUNDLE_KEY,
+                BUNDLE_ARRAY_STEPS_KEY,
+                BUNDLE_STEP_ID_KEY,
+                BUNDLE_RECIPE_NAME_KEY,
+                BUNDLE_TABLET_TEST_KEY);
+
         // Mapping
         mStepDetailsFragment = new StepDetailsFragment();
         fm = getSupportFragmentManager();
@@ -62,16 +72,11 @@ public class StepDetailsActivity extends AppCompatActivity {
         backBtn = findViewById(R.id.button_previous_step);
         nextBtn = findViewById(R.id.button_next_step);
         navSection = findViewById(R.id.navigation_section_linear_layout);
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            navSection.setVisibility(View.GONE);
+        if (!isTest) {
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                navSection.setVisibility(View.GONE);
+            }
         }
-
-        // Get data from bundle
-        getStepDetailsDataFromBundle(
-                MAIN_BUNDLE_KEY,
-                BUNDLE_ARRAY_STEPS_KEY,
-                BUNDLE_STEP_ID_KEY,
-                BUNDLE_RECIPE_NAME_KEY);
 
         // Set title on the ActionBar
         setTitle(mRecipeName + "'s instructions");
@@ -83,7 +88,7 @@ public class StepDetailsActivity extends AppCompatActivity {
             if (!navigationClicked) {
                 mStepDetailsFragment = (StepDetailsFragment) fm.getFragment(savedInstanceState, "step_details_fragment");
             }
-
+            isTest = savedInstanceState.getBoolean("is_test");
         }
 
         getDataForSpecificStep(mCurrentStep);
@@ -94,19 +99,9 @@ public class StepDetailsActivity extends AppCompatActivity {
         showOrHideNavigationButtons();
 
         // Navigation buttons logic
-        nextBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onNextButtonClicked(mCurrentStep + 1);
-            }
-        });
+        nextBtn.setOnClickListener(v -> onNextButtonClicked(mCurrentStep + 1));
 
-        backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackButtonClicked(mCurrentStep - 1);
-            }
-        });
+        backBtn.setOnClickListener(v -> onBackButtonClicked(mCurrentStep - 1));
     }
 
     public void getDataForSpecificStep(int position) {
@@ -139,7 +134,7 @@ public class StepDetailsActivity extends AppCompatActivity {
         }
     }
 
-    private void getStepDetailsDataFromBundle(String mainBundleKey, String StepsArrayKey, String stepPositionClicked, String recipeNameKey) {
+    private void getStepDetailsDataFromBundle(String mainBundleKey, String StepsArrayKey, String stepPositionClicked, String recipeNameKey, String tabletTestKey) {
         Bundle stepDetailBundle = getIntent().getExtras();
         if (stepDetailBundle != null) {
             if (stepDetailBundle.containsKey(mainBundleKey)) {
@@ -147,6 +142,9 @@ public class StepDetailsActivity extends AppCompatActivity {
                 mStepArrayList = stepDetailBundle.getParcelableArrayList(StepsArrayKey);
                 mCurrentStep = stepDetailBundle.getInt(stepPositionClicked);
                 mRecipeName = stepDetailBundle.getString(recipeNameKey);
+                if (stepDetailBundle.containsKey(tabletTestKey)) {
+                    isTest = stepDetailBundle.getBoolean(tabletTestKey);
+                }
             } else {
                 Log.i(TAG, "Cannot get object from bundle. Incorrect bundle key string.");
             }
@@ -217,6 +215,6 @@ public class StepDetailsActivity extends AppCompatActivity {
         fm.putFragment(outState, "step_details_fragment", mStepDetailsFragment);
         outState.putBoolean("fragment_added", fragmentAdded);
         outState.putInt("clicked_step_position", mCurrentStep);
-
+        outState.putBoolean("is_test", isTest);
     }
 }

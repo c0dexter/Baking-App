@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Objects;

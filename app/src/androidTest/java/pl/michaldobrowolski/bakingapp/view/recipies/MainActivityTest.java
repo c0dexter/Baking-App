@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -22,7 +21,6 @@ import pl.michaldobrowolski.bakingapp.api.model.pojo.Recipe;
 import pl.michaldobrowolski.bakingapp.api.service.ApiClient;
 import pl.michaldobrowolski.bakingapp.api.service.ApiInterface;
 import pl.michaldobrowolski.bakingapp.ui.recipe.MainActivity;
-import pl.michaldobrowolski.bakingapp.ui.recipe.RecipeMasterListFragment;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -87,8 +85,6 @@ public class MainActivityTest {
         intended(toPackage("pl.michaldobrowolski.bakingapp"));
         intended(hasExtra(INTENT_RECIPE_KEY_FOR_ESPRESSO, new Gson().toJson(mRecipeList.get(position))));
     }
-
-
 
 
 }
